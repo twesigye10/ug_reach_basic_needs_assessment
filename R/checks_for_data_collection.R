@@ -22,3 +22,7 @@ df_tool_data <- readxl::read_excel("inputs/BNA_data.xlsx") %>%
 
 df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
+
+# output holder -----------------------------------------------------------
+
+logic_output <- list()
