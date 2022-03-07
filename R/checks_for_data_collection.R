@@ -64,3 +64,20 @@ if(exists("df_c_time_btn_survey")){
     logic_output$df_c_time_btn_survey <- df_c_time_btn_survey
   }
 }
+
+
+# combined logical checks ----------------------------------------------------------
+
+df_logic_checks <- bind_rows(logic_output)
+
+# others checks
+
+df_others_data <- extract_other_data(input_tool_data = df_tool_data, 
+                                     input_survey = df_survey, 
+                                     input_choices = df_choices)
+
+# combine logic and others checks
+df_combined_checks <- bind_rows(df_logic_checks, df_others_data)
+
+# output the resulting data frame
+write_csv(x = df_combined_checks, file = paste0("outputs/", butteR::date_file_prefix(), "_combined_checks_caregiver.csv"), na = "")
