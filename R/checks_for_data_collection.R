@@ -36,3 +36,31 @@ if(exists("df_c_duplicate_uuid")){
     logic_output$df_c_duplicate_uuid <- df_c_duplicate_uuid
   }
 }
+
+# Time checks -------------------------------------------------------------
+
+# Time interval for the survey
+min_time_of_survey <- 25
+max_time_of_survey <- 120
+
+df_c_survey_time <-  check_survey_time(input_tool_data = df_tool_data, 
+                                       input_min_time = min_time_of_survey, 
+                                       input_max_time = max_time_of_survey)
+
+if(exists("df_c_survey_time")){
+  if(nrow(df_c_survey_time) > 0){
+    logic_output$df_c_survey_time <- df_c_survey_time
+  }
+}
+
+# check the time between surveys
+min_time_btn_surveys <- 5
+
+df_c_time_btn_survey <- check_time_interval_btn_surveys(input_tool_data = df_tool_data,
+                                                        input_min_time = min_time_btn_surveys)
+
+if(exists("df_c_time_btn_survey")){
+  if(nrow(df_c_time_btn_survey) > 0){
+    logic_output$df_c_time_btn_survey <- df_c_time_btn_survey
+  }
+}
