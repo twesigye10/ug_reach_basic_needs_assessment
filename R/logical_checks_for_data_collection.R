@@ -165,3 +165,39 @@ if(exists("df_ability_meet_needs_yes_lcsi")){
     logic_seperate_output$df_ability_meet_needs_yes_lcsi <- df_ability_meet_needs_yes_lcsi
   }
 }
+
+# lcsi_intro_7
+df_yes_lcsi_but_no_other_circumstances <- df_tool_data %>% 
+  filter(lcsi_intro == "yes"  &
+           increase_number_search_work == "no" & 
+           sell_assets == "no" &
+           purchase_on_credit == "no" &
+           spend_savings == "no" &
+           borrow_money == "no" &
+           sell_productive_assets == "no" &
+           reduce_expenditure == "no" &
+           withdraw_children == "no" &
+           beg_charity == "no" &
+           sell_more_than_usual == "no") %>% 
+  mutate(i.check.type = "change_response",
+         i.check.name = "lcsi_intro",
+         i.check.current_value = lcsi_intro,
+         i.check.value = "",
+         i.check.issue_id = "lcsi_intro_7",
+         i.check.issue = glue("increase_number_search_work: {increase_number_search_work}, sell_assets: {sell_assets}, purchase_on_credit: {purchase_on_credit}, spend_savings: {spend_savings}, borrow_money: {borrow_money}, sell_productive_assets: {sell_productive_assets}, reduce_expenditure: {reduce_expenditure}, withdraw_children: {withdraw_children}, beg_charity: {beg_charity}, sell_more_than_usual: {sell_more_than_usual}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "accept", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+if(exists("df_yes_lcsi_but_no_other_circumstances")){
+  if(nrow(df_yes_lcsi_but_no_other_circumstances) > 0){
+    logic_seperate_output$df_yes_lcsi_but_no_other_circumstances <- df_yes_lcsi_but_no_other_circumstances
+  }
+}
