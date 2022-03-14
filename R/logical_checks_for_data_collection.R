@@ -112,7 +112,7 @@ if(exists("df_disagree_child_marriage_but_agree_girl_to_be_married")){
   }
 }
 
-# ability_meet_needs_5
+# inability_meet_needs_5
 df_inability_meet_needs_no_lcsi <- df_tool_data %>% 
   filter(ability_meet_needs %in% c("none", "some", "about_half") &
            lcsi_intro == "no") %>% 
@@ -120,7 +120,7 @@ df_inability_meet_needs_no_lcsi <- df_tool_data %>%
          i.check.name = "ability_meet_needs",
          i.check.current_value = ability_meet_needs,
          i.check.value = "",
-         i.check.issue_id = "ability_meet_needs_5",
+         i.check.issue_id = "inability_meet_needs_5",
          i.check.issue = glue("lcsi_intro: {lcsi_intro}"),
          i.check.other_text = "",
          i.check.checked_by = "",
@@ -136,5 +136,32 @@ df_inability_meet_needs_no_lcsi <- df_tool_data %>%
 if(exists("df_inability_meet_needs_no_lcsi")){
   if(nrow(df_inability_meet_needs_no_lcsi) > 0){
     logic_seperate_output$df_inability_meet_needs_no_lcsi <- df_inability_meet_needs_no_lcsi
+  }
+}
+
+# ability_meet_needs_6
+df_ability_meet_needs_yes_lcsi <- df_tool_data %>% 
+  filter(ability_meet_needs %in% c("all", "most") &
+           lcsi_intro == "yes") %>% 
+  mutate(i.check.type = "change_response",
+         i.check.name = "ability_meet_needs",
+         i.check.current_value = ability_meet_needs,
+         i.check.value = "",
+         i.check.issue_id = "ability_meet_needs_6",
+         i.check.issue = glue("lcsi_intro: {lcsi_intro}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "accept", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+if(exists("df_ability_meet_needs_yes_lcsi")){
+  if(nrow(df_ability_meet_needs_yes_lcsi) > 0){
+    logic_seperate_output$df_ability_meet_needs_yes_lcsi <- df_ability_meet_needs_yes_lcsi
   }
 }
