@@ -2,7 +2,7 @@
 
 logic_seperate_output <- list()
 
-df_not_agree_child_marriage_but_certain_circumstances <- df_tool_data %>% 
+df_disagree_child_marriage_but_agree_circumstances <- df_tool_data %>% 
   filter(okay_arrange_marriage %in% c("disagree", "strongly_disagree", "neither_agree_nor_agree") &
            (okay_arrange_marriage_money %in% c("agree", "strongly_agree") |
               okay_arrange_marriage_safety %in% c("agree", "strongly_agree"))) %>% 
@@ -23,9 +23,9 @@ df_not_agree_child_marriage_but_certain_circumstances <- df_tool_data %>%
   dplyr::select(starts_with("i.check")) %>% 
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
-if(exists("df_not_agree_child_marriage_but_certain_circumstances")){
-  if(nrow(df_not_agree_child_marriage_but_certain_circumstances) > 0){
-    logic_seperate_output$df_not_agree_child_marriage_but_certain_circumstances <- df_not_agree_child_marriage_but_certain_circumstances
+if(exists("df_disagree_child_marriage_but_agree_circumstances")){
+  if(nrow(df_disagree_child_marriage_but_agree_circumstances) > 0){
+    logic_seperate_output$df_disagree_child_marriage_but_agree_circumstances <- df_disagree_child_marriage_but_agree_circumstances
   }
 }
 
