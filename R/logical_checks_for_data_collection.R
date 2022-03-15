@@ -246,3 +246,26 @@ df_same_value_given_for_all_fcs <- df_tool_data %>%
 
 add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_same_value_given_for_all_fcs")
 
+# very_low_consumption_of_staple_foods_11
+df_very_low_consumption_of_staple_foods <- df_tool_data %>% 
+  filter(cereals <= 2 | tubers <= 2 | pulses <= 2 | vegetables <= 2) %>% 
+  mutate(i.check.type = "change_response",
+         i.check.name = "cereals",
+         i.check.current_value = cereals,
+         i.check.value = "",
+         i.check.issue_id = "very_low_consumption_of_staple_foods_11",
+         i.check.issue = glue("pulses: {pulses}, vegetables: {vegetables}, tubers: {tubers}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "Same integer given for all FCS food groups", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_very_low_consumption_of_staple_foods")
+
+
