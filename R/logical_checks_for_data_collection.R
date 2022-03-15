@@ -176,3 +176,27 @@ df_yes_lcsi_but_no_other_circumstances <- df_tool_data %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_yes_lcsi_but_no_other_circumstances")
+
+# no_hc_accessed_and_not_basic_need_8
+df_no_hc_accessed_and_not_basic_need <- df_tool_data %>% 
+  filter(hc_accessed == "no" &
+           (ability_meet_needs == "all" | !str_detect(string = str_c(c("hc", "hc_children", "hc_women", "hc_disabilities"), collapse = " "),
+                         pattern = str_replace_all(string = needs_not_met, pattern = " ", replacement = "|")))) %>% 
+  mutate(i.check.type = "change_response",
+         i.check.name = "hc_accessed",
+         i.check.current_value = hc_accessed,
+         i.check.value = "",
+         i.check.issue_id = "no_hc_accessed_and_not_basic_need_8",
+         i.check.issue = glue("ability_meet_needs: {ability_meet_needs}, needs_not_met: {needs_not_met}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "accept", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_no_hc_accessed_and_not_basic_need")
