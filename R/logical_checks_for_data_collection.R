@@ -202,7 +202,7 @@ df_no_hc_accessed_and_not_basic_need <- df_tool_data %>%
 add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_no_hc_accessed_and_not_basic_need")
 
 # hc_accessed_and_no_hc_needed_9
-hc_accessed_and_no_hc_needed <- df_tool_data %>% 
+df_hc_accessed_and_no_hc_needed <- df_tool_data %>% 
   filter((hc_accessed == "yes" | hc_needed == "no") &  str_detect(string = str_c(c("hc", "hc_children", "hc_women", "hc_disabilities"), collapse = " "),
                          pattern = str_replace_all(string = needs_not_met, pattern = " ", replacement = "|"))) %>% 
   mutate(i.check.type = "change_response",
@@ -222,4 +222,27 @@ hc_accessed_and_no_hc_needed <- df_tool_data %>%
   dplyr::select(starts_with("i.check")) %>% 
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
-add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "hc_accessed_and_no_hc_needed")
+add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_hc_accessed_and_no_hc_needed")
+
+# same_value_given_for_all_fcs_10
+df_same_value_given_for_all_fcs <- df_tool_data %>% 
+  filter(cereals == pulses == vegetables == fruits == tubers == protein == dairy == sugar == oils) %>% 
+  mutate(i.check.type = "change_response",
+         i.check.name = "cereals",
+         i.check.current_value = cereals,
+         i.check.value = "",
+         i.check.issue_id = "same_vale_given_for_all_fcs_10",
+         i.check.issue = glue("pulses: {pulses}, vegetables: {vegetables}, fruits: {fruits}, tubers: {tubers}, protein: {protein}, dairy: {dairy}, sugar: {sugar}, oils: {oils}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "Same integer given for all FCS food groups", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_same_value_given_for_all_fcs")
+
