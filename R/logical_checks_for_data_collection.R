@@ -268,6 +268,42 @@ df_very_low_consumption_of_staple_foods <- df_tool_data %>%
 
 add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_very_low_consumption_of_staple_foods")
 
+# reported_no_consumption_for_child
+df_reported_no_consumption_for_child <- df_repeat_child_nutrition_qns_data %>% 
+  filter(breast_fed %in% c("no", "dk"),
+           infant_formula %in% c("no", "dk"),
+           animal_milk  %in% c("no", "dk"),
+           yoghurt %in% c("no", "dk"),
+           grains  %in% c("no", "dk"),
+           roots  %in% c("no", "dk"),
+           pulses_nuts  %in% c("no", "dk"),
+           yoghurt_other  %in% c("no", "dk"),
+           cheese  %in% c("no", "dk"),
+           meat  %in% c("no", "dk"),
+           eggs  %in% c("no", "dk"),
+           vita_veg  %in% c("no", "dk"),
+           vita_fruits  %in% c("no", "dk"),
+           other_veg  %in% c("no", "dk"),
+           other_fruits  %in% c("no", "dk")) %>% 
+  mutate(i.check.type = "remove_loop_entry",
+         i.check.name = "",
+         i.check.current_value = "",
+         i.check.value = "",
+         i.check.issue_id = "reported_no_consumption_for_child_12",
+         i.check.issue = glue("breast_fed: {breast_fed}, infant_formula: {infant_formula}, animal_milk: {animal_milk}, yoghurt: {yoghurt}, grains: {grains}, roots: {roots}, pulses_nuts: {pulses_nuts}, yoghurt_other: {yoghurt_other}, cheese: {cheese}, meat: {meat}, eggs: {eggs}, vita_fruits: {vita_fruits}, other_veg: {other_veg}, other_fruits: {other_fruits}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "Respondent reports no consumption for child. Follow-up with enumerator", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_reported_no_consumption_for_child")
+
 # no_child_performs_domestic_labor_but_reports_domestic_labor
 
 df_no_child_performs_domestic_labor_but_reports_domestic_labor <- df_repeat_children_school_aged_qns_data %>%
