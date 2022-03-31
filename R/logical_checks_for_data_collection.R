@@ -397,3 +397,25 @@ df_nakivale_reports_receiving_care_apeal_aid <- df_tool_data %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_nakivale_reports_receiving_care_apeal_aid")
+
+# no_children_in_hh_but_reports_school_withdrawn_chilren
+df_no_children_in_hh_but_reports_school_withdrawn_chilren <- df_tool_data %>% 
+  filter(withdraw_children == "yes", num_children_school_aged == 0) %>% 
+  mutate(i.check.type = "change_response",
+         i.check.name = "withdraw_children",
+         i.check.current_value = withdraw_children,
+         i.check.value = "no",
+         i.check.issue_id = "no_children_in_hh_but_reports_school_withdrawn_chilren_17",
+         i.check.issue = glue("num_children_school_aged: {num_children_school_aged}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_no_children_in_hh_but_reports_school_withdrawn_chilren")
