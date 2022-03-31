@@ -375,3 +375,25 @@ df_Kyaka_reports_receiving_NRC_aid <- df_tool_data %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_Kyaka_reports_receiving_NRC_aid")
+
+# nakivale_reports_receiving_care_apeal_aid
+df_nakivale_reports_receiving_care_apeal_aid <- df_tool_data %>% 
+  filter(location == "kyaka", str_detect(string = received_assistance_actor, pattern = "care_apeal")) %>% 
+  mutate(i.check.type = "remove_option",
+         i.check.name = "received_assistance_actor",
+         i.check.current_value = received_assistance_actor,
+         i.check.value = "nrc",
+         i.check.issue_id = "nakivale_reports_receiving_care_apeal_aid_16",
+         i.check.issue = glue("location: {location}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "Respondent in Nakivale reports having received APEAL aid, but consortia is not present in this location", 
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_seperate_output", input_df_name = "df_nakivale_reports_receiving_care_apeal_aid")
