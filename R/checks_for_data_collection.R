@@ -23,6 +23,10 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
 df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
 
+df_sample_data <- read_csv("inputs/bna_sampling_hhids.csv") %>% 
+  janitor::clean_names() %>% 
+  rename(unique_hhid_number = id)
+
 # output holder -----------------------------------------------------------
 
 logic_output <- list()
