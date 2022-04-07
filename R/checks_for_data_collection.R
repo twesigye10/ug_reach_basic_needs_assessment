@@ -21,6 +21,7 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
   )
 
 df_repeat_child_nutrition_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_nutrition_qns")
+df_repeat_children_school_aged_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "children_school_aged_qns")
 
 df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
@@ -389,7 +390,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_re
 # no_child_performs_domestic_labor_but_reports_domestic_labor
 
 df_no_child_performs_domestic_labor_but_reports_domestic_labor <- df_repeat_children_school_aged_qns_data %>%
-  group_by("_parent_index") %>% 
+  group_by(`_parent_index`) %>% 
   filter(!str_detect(string = paste(child_domestic_labor, collapse = " : "), pattern = "yes"), 
          str_detect(string = non_attending_reason, pattern = "child_domestic_labor")) %>% 
   mutate(i.check.type = "remove_loop_entry",
