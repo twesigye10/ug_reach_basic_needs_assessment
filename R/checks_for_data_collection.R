@@ -31,11 +31,7 @@ logic_output <- list()
 
 df_c_duplicate_uuid <-  check_duplicates_by_uuid(input_tool_data = df_tool_data)
 
-if(exists("df_c_duplicate_uuid")){
-  if(nrow(df_c_duplicate_uuid) > 0){
-    logic_output$df_c_duplicate_uuid <- df_c_duplicate_uuid
-  }
-}
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_duplicate_uuid")
 
 # Time checks -------------------------------------------------------------
 
@@ -47,11 +43,7 @@ df_c_survey_time <-  check_survey_time(input_tool_data = df_tool_data,
                                        input_min_time = min_time_of_survey, 
                                        input_max_time = max_time_of_survey)
 
-if(exists("df_c_survey_time")){
-  if(nrow(df_c_survey_time) > 0){
-    logic_output$df_c_survey_time <- df_c_survey_time
-  }
-}
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_survey_time")
 
 # check the time between surveys
 min_time_btn_surveys <- 5
@@ -59,12 +51,7 @@ min_time_btn_surveys <- 5
 df_c_time_btn_survey <- check_time_interval_btn_surveys(input_tool_data = df_tool_data,
                                                         input_min_time = min_time_btn_surveys)
 
-if(exists("df_c_time_btn_survey")){
-  if(nrow(df_c_time_btn_survey) > 0){
-    logic_output$df_c_time_btn_survey <- df_c_time_btn_survey
-  }
-}
-
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_time_btn_survey")
 
 # combined logical checks ----------------------------------------------------------
 
