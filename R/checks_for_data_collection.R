@@ -20,6 +20,8 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
          !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
   )
 
+df_repeat_child_nutrition_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_nutrition_qns")
+
 df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
 
@@ -305,7 +307,8 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_hc
 
 # same_value_given_for_all_fcs_10
 df_same_value_given_for_all_fcs <- df_tool_data %>% 
-  filter(cereals == pulses == vegetables == fruits == tubers == protein == dairy == sugar == oils) %>% 
+  filter(cereals == pulses, cereals == vegetables, cereals == fruits, cereals == tubers, 
+         cereals == protein, cereals == dairy, cereals == sugar, cereals == oils) %>% 
   mutate(i.check.type = "change_response",
          i.check.name = "cereals",
          i.check.current_value = cereals,
