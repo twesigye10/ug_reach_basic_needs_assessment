@@ -22,10 +22,12 @@ library(leaflet)
 
 # read data
 df_sample_breakdown <- readr::read_csv(file = "../outputs/sample_breakdown.csv") %>% 
-  mutate(hhid_code = paste0(location, "_", providers))
+  mutate(providers = str_replace(string = providers, pattern = "apeal", replacement = "ape"),
+         providers = str_replace(string = providers, pattern = "include", replacement = "inc"),
+         hhid_code = paste0(location, "_", providers))
 
-df_for_colnames <- df_sample_breakdown %>% 
-  select(location, hhid_code) %>% 
+df_for_colnames <- df_sample_breakdown %>%
+  select(location, hhid_code) %>%
   unique()
 
 df_tool_data <- readxl::read_excel(path = "../inputs/BNA_data.xlsx") %>% 
@@ -156,28 +158,79 @@ dt_enum_performance_options <- function(x){
 ### Settlements:  **`r df_updated_tool_data %>% nrow()`** surveys
 
 ```{r, echo = FALSE}
-df_refugee_samp_per_settlement <- df_sample_breakdown
+# df_refugee_samp_per_settlement <- df_sample_breakdown
+# 
+# df_cl_surveys_for_deletion <- df_cl_log %>% 
+#   filter(type == "remove_survey", reviewed == 1, adjust_log != "delete_log") %>%
+#   group_by(location, hhid_code) %>% # could include: hhid_code
+#   distinct(uuid) %>%
+#   summarise(surveys_for_deletion = n()) %>% 
+#   mutate(hhid_code = str_replace(string = hhid_code , pattern = "inc_ucc", replacement = "ucc_inc" ))
+# 
+# df_updated_tool_data %>% 
+#   group_by(location, hhid_code) %>% 
+#   summarise(number_of_surveys = n()) %>% 
+#   arrange(location) %>% 
+#   right_join(df_refugee_samp_per_settlement, by = "hhid_code") %>% 
+#   left_join(df_cl_surveys_for_deletion, by = "hhid_code") %>% 
+#   mutate(number_of_surveys = ifelse(is.na(number_of_surveys), 0, number_of_surveys),
+#          surveys_for_deletion = ifelse(is.na(surveys_for_deletion), 0, surveys_for_deletion),
+#          int.surveys_and_deletion = number_of_surveys - surveys_for_deletion,
+#          remaining_surveys = sample_size - int.surveys_and_deletion ) %>%
+#   # select(-location) %>% 
+#   # rename(location = location.x) %>%
+#   # mutate(location = location.y) %>%
+#   # select(-c(int.surveys_and_deletion, location.y)) %>%
+#   dt_with_modified_options()
 
-df_cl_surveys_for_deletion <- df_cl_log %>% 
-  filter(type == "remove_survey", reviewed == 1, adjust_log != "delete_log") %>%
-  group_by(location, hhid_code) %>% # could include: hhid_code
-  distinct(uuid) %>%
-  summarise(surveys_for_deletion = n())
+```
 
-df_updated_tool_data %>% 
-  group_by(location, hhid_code) %>% 
-  summarise(number_of_surveys = n()) %>% 
-  arrange(location) %>% 
-  right_join(df_refugee_samp_per_settlement, by = "hhid_code") %>% 
-  left_join(df_cl_surveys_for_deletion, by = "hhid_code") %>% 
-  mutate(number_of_surveys = ifelse(is.na(number_of_surveys), 0, number_of_surveys),
-         surveys_for_deletion = ifelse(is.na(surveys_for_deletion), 0, surveys_for_deletion),
-         int.surveys_and_deletion = number_of_surveys - surveys_for_deletion,
-         remaining_surveys = required_samples - int.surveys_and_deletion ) %>% 
-  # left_join(df_for_colnames, by = "hhid_code") %>% 
-  # rename(location = location.x) %>%
-  # mutate(location = location.y) %>%
-  # select(-c(int.surveys_and_deletion, location.y)) %>% 
-  dt_with_modified_options()
+### Daily enumerator performance
 
+The average survey time for all the data is: **`r round(mean(df_enum_performance$int.survey_time_interval), 0)`** Minutes
+
+```{r, echo = FALSE}
+
+df_enum_performance %>% 
+  group_by(location, start_date, enumerator_id) %>% 
+  summarise(number_of_interviews_done = n(), `average_survey_time(minutes)` = round(mean(int.survey_time_interval, na.rm = TRUE), 0)) %>% 
+  dt_enum_performance_options()
+```
+
+## Looking into the cleaning log
+
+### Number of issues by issue_id
+
+```{r, echo = FALSE}
+df_cl_log %>% 
+  group_by(issue_id) %>% 
+  summarise(number_of_issues_by_issue_id = n()) %>%
+  dt_options_fewcols()
+```
+### Number of issues by enumerator
+
+```{r, echo = FALSE}
+df_cl_log %>% 
+  group_by(enumerator_id) %>% 
+  summarise(number_of_issues_by_enumerator_id = n()) %>%
+  dt_options_fewcols()
+```
+
+### Number of issues by enumerator and issue_id
+
+```{r, echo = FALSE}
+df_cl_log %>% 
+  group_by(enumerator_id, issue_id) %>% 
+  summarise(number_of_issues_by_enumerator_and_issue_id = n()) %>%
+  dt_options_fewcols()
+```
+
+### Enumerators with surveys for deletion
+
+```{r, echo = FALSE}
+df_cl_log %>% 
+  filter(type == "remove_survey", reviewed == 1, adjust_log != "delete_log") %>% 
+  group_by(enumerator_id) %>% 
+  summarise(number_of_surveys_for_deletion_by_enumerator = n()) %>%
+  dt_options_fewcols()
 ```
