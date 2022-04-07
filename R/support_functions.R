@@ -150,6 +150,31 @@ check_duplicates_by_uuid <- function(input_tool_data) {
     rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 }
 
+# check for duplicate hhid numbers
+check_duplicate_hhid_numbers <- function(input_tool_data, input_sample_hhid_nos_list) {
+  input_tool_data %>% 
+    mutate(unique_hhid_number = hh_id) %>% 
+    group_by(i.check.location, i.check.hh_id) %>% 
+    filter(n() > 1, unique_hhid_number %in% input_sample_hhid_nos_list) %>% 
+    mutate(i.check.type = "change_response",
+           i.check.name = "hh_id",
+           i.check.current_value = hh_id,
+           i.check.value = "",
+           i.check.issue_id = "hhid_c_duplicate_hhid_no",
+           i.check.issue = glue("hh_id: {hh_id} is duplicated: check that its not a repeated survey"),
+           i.check.other_text = "",
+           i.check.checked_by = "",
+           i.check.checked_date = as_date(today()),
+           i.check.comment = "", 
+           i.check.reviewed = "",
+           i.check.adjust_log = "",
+           i.check.uuid_cl = "",
+           i.check.so_sm_choices = "") %>% 
+    ungroup() %>%
+    dplyr::select(starts_with("i.check"))%>% 
+    rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+}
+
 # survey time check -------------------------------------------------------
 
 # check survey time against expected minimum time and maximum time of the survey
