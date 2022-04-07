@@ -21,7 +21,12 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
   )
 
 df_repeat_child_nutrition_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_nutrition_qns")
-df_repeat_children_school_aged_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "children_school_aged_qns")
+
+repeat_children_school_aged_qns <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "children_school_aged_qns") 
+
+df_repeat_children_school_aged_qns_data <- df_tool_data %>% 
+  select(-`_index`) %>% 
+  right_join(repeat_children_school_aged_qns, by = c("_uuid" = "_submission__uuid"))
 
 df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
@@ -387,55 +392,55 @@ df_reported_no_consumption_for_child <- df_repeat_child_nutrition_qns_data %>%
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_reported_no_consumption_for_child")
 
-# # no_child_performs_domestic_labor_but_reports_domestic_labor
-# 
-# df_no_child_performs_domestic_labor_but_reports_domestic_labor <- df_repeat_children_school_aged_qns_data %>%
-#   group_by(`_parent_index`) %>% 
-#   filter(!str_detect(string = paste(child_domestic_labor, collapse = " : "), pattern = "yes"), 
-#          str_detect(string = non_attending_reason, pattern = "child_domestic_labor")) %>% 
-#   mutate(i.check.type = "remove_loop_entry",
-#          i.check.name = "child_domestic_labor",
-#          i.check.current_value = child_domestic_labor,
-#          i.check.value = "",
-#          i.check.issue_id = "logic_c_no_child_performs_domestic_labor_but_reports_domestic_labor_13",
-#          i.check.issue = glue("non_attending_reason: {non_attending_reason}"),
-#          i.check.other_text = "",
-#          i.check.checked_by = "",
-#          i.check.checked_date = as_date(today()),
-#          i.check.comment = " reports no child has to perform domestic labor, but reports domestic labor as the reason", 
-#          i.check.reviewed = "",
-#          i.check.adjust_log = "",
-#          i.check.uuid_cl = "",
-#          i.check.so_sm_choices = "") %>% 
-#   dplyr::select(starts_with("i.check")) %>% 
-#   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
-# 
-# add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_no_child_performs_domestic_labor_but_reports_domestic_labor")
+# no_child_performs_domestic_labor_but_reports_domestic_labor
+
+df_no_child_performs_domestic_labor_but_reports_domestic_labor <- df_repeat_children_school_aged_qns_data %>%
+  group_by(`_parent_index`) %>%
+  filter(!str_detect(string = paste(child_domestic_labor, collapse = " : "), pattern = "yes"),
+         str_detect(string = non_attending_reason, pattern = "child_domestic_labor")) %>%
+  mutate(i.check.type = "remove_loop_entry",
+         i.check.name = "child_domestic_labor",
+         i.check.current_value = child_domestic_labor,
+         i.check.value = "",
+         i.check.issue_id = "logic_c_no_child_performs_domestic_labor_but_reports_domestic_labor_13",
+         i.check.issue = glue("non_attending_reason: {non_attending_reason}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = " reports no child has to perform domestic labor, but reports domestic labor as the reason",
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>%
+  dplyr::select(starts_with("i.check")) %>%
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_no_child_performs_domestic_labor_but_reports_domestic_labor")
 
 # no_child_performs_economic_labor_but_reports_economic_labor
 
-# df_no_child_performs_economic_labor_but_reports_economic_labor <- df_repeat_children_school_aged_qns_data %>%
-#   group_by("_parent_index") %>% 
-#   filter(!str_detect(string = paste(child_economic_labor, collapse = " : "), pattern = "yes"), 
-#          str_detect(string = non_attending_reason, pattern = "child_economic_labor")) %>% 
-#   mutate(i.check.type = "remove_loop_entry",
-#          i.check.name = "child_economic_labor",
-#          i.check.current_value = child_economic_labor,
-#          i.check.value = "",
-#          i.check.issue_id = "logic_c_no_child_performs_economic_labor_but_reports_economic_labor_14",
-#          i.check.issue = glue("non_attending_reason: {non_attending_reason}"),
-#          i.check.other_text = "",
-#          i.check.checked_by = "",
-#          i.check.checked_date = as_date(today()),
-#          i.check.comment = " reports no child has to perform economic labor, but reports economic labor as the reason", 
-#          i.check.reviewed = "",
-#          i.check.adjust_log = "",
-#          i.check.uuid_cl = "",
-#          i.check.so_sm_choices = "") %>% 
-#   dplyr::select(starts_with("i.check")) %>% 
-#   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
-# 
-# add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_no_child_performs_economic_labor_but_reports_economic_labor")
+df_no_child_performs_economic_labor_but_reports_economic_labor <- df_repeat_children_school_aged_qns_data %>%
+  group_by("_parent_index") %>%
+  filter(!str_detect(string = paste(child_economic_labor, collapse = " : "), pattern = "yes"),
+         str_detect(string = non_attending_reason, pattern = "child_economic_labor")) %>%
+  mutate(i.check.type = "remove_loop_entry",
+         i.check.name = "child_economic_labor",
+         i.check.current_value = child_economic_labor,
+         i.check.value = "",
+         i.check.issue_id = "logic_c_no_child_performs_economic_labor_but_reports_economic_labor_14",
+         i.check.issue = glue("non_attending_reason: {non_attending_reason}"),
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = " reports no child has to perform economic labor, but reports economic labor as the reason",
+         i.check.reviewed = "",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>%
+  dplyr::select(starts_with("i.check")) %>%
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_no_child_performs_economic_labor_but_reports_economic_labor")
 
 # Kyaka_reports_receiving_NRC_aid
 df_Kyaka_reports_receiving_NRC_aid <- df_tool_data %>% 
