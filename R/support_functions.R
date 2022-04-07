@@ -220,7 +220,7 @@ check_survey_time <- function(input_tool_data, input_min_time, input_max_time) {
            i.check.comment = "", 
            i.check.reviewed = "",
            i.check.adjust_log = "",
-           i.check.uuid_cl = paste0(i.check.uuid, "_", i.check.type, "_", i.check.name),
+           i.check.uuid_cl = "",
            i.check.so_sm_choices = "")%>% 
     filter(i.check.issue_id %in% c("less_survey_time", "more_survey_time")) %>% 
     dplyr::select(starts_with("i.check"))%>% 
@@ -248,7 +248,7 @@ check_time_interval_btn_surveys <- function(input_tool_data, input_min_time) {
            i.check.comment = "", 
            i.check.reviewed = "",
            i.check.adjust_log = "",
-           i.check.uuid_cl = paste0(i.check.uuid, "_", i.check.type, "_", i.check.name),
+           i.check.uuid_cl = "",
            i.check.so_sm_choices = "") %>% 
     dplyr::select(starts_with("i.check"))%>% 
     rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
@@ -270,7 +270,7 @@ check_outliers <- function(input_tool_data, input_column, input_lower_limit, inp
            i.check.comment = "",
            i.check.reviewed = "",
            i.check.adjust_log = "",
-           i.check.uuid_cl = paste0(i.check.uuid, "_", i.check.type, "_", i.check.name),
+           i.check.uuid_cl = "",
            i.check.so_sm_choices = "") %>%
     ungroup() %>%
     dplyr::select(starts_with("i.check"))%>%
