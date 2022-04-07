@@ -27,28 +27,6 @@ df_sample_data <- read_csv("inputs/bna_sampling_hhids.csv") %>%
   janitor::clean_names() %>% 
   rename(unique_hhid_number = id)
 
-# check for point number not being in samples
-check_hhid_number_not_in_samples <- function(input_tool_data, input_sample_hhid_nos_list) {
-  input_tool_data %>% 
-    mutate(unique_hhid_number = hh_id) %>% 
-    filter(!unique_hhid_number %in% input_sample_hhid_nos_list) %>% 
-    mutate(i.check.type = "change_response",
-           i.check.name = "hh_id",
-           i.check.current_value = hh_id,
-           i.check.value = "",
-           i.check.issue_id = "hhid_c_hhid_no_not_in_sample",
-           i.check.issue = glue("hh_id: {hh_id} not in samples"),
-           i.check.other_text = "",
-           i.check.checked_by = "",
-           i.check.checked_date = as_date(today()),
-           i.check.comment = "", 
-           i.check.reviewed = "",
-           i.check.adjust_log = "",
-           i.check.uuid_cl = "",
-           i.check.so_sm_choices = "") %>% 
-    dplyr::select(starts_with("i.check"))%>% 
-    rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
-}
 # output holder -----------------------------------------------------------
 
 logic_output <- list()
