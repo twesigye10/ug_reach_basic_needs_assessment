@@ -41,7 +41,7 @@ extract_other_data <- function(input_tool_data, input_survey, input_choices) {
     
     df_filtered_data <- df_data %>% 
       select(-contains("/")) %>% 
-      select(uuid, start_date, enumerator_id, district_name, point_number, other_text = cln, current_value = current_parent_qn) %>% 
+      select(uuid, start_date, enumerator_id, location, hh_id, other_text = cln, current_value = current_parent_qn) %>% 
       filter(!is.na(other_text), !other_text %in% c(" ", "NA")) %>% 
       mutate( other_name = cln, 
               int.my_current_val_extract = ifelse(str_detect(current_value, "\\bother\\b"), str_extract_all(string = current_value, pattern = "\\bother\\b|\\w+_other\\b"), current_value),
@@ -106,8 +106,8 @@ extract_other_data <- function(input_tool_data, input_survey, input_choices) {
     select(uuid,
            start_date,
            enumerator_id,
-           district_name,
-           point_number,
+           location,
+           hh_id,
            type,
            name,
            current_value,
@@ -133,7 +133,7 @@ check_duplicates_by_uuid <- function(input_tool_data) {
     filter(rank > 1) %>%  
     mutate(
       i.check.type = "remove_survey",
-      i.check.name = "point_number",
+      i.check.name = "hh_id",
       i.check.current_value = "",
       i.check.value = "",
       i.check.issue_id = "duplicate_uuid",
@@ -158,7 +158,7 @@ check_survey_time <- function(input_tool_data, input_min_time, input_max_time) {
     mutate(int.survey_time_interval = lubridate::time_length(end - start, unit = "min"),
            int.survey_time_interval = ceiling(int.survey_time_interval),
            i.check.type = "remove_survey",
-           i.check.name = "point_number",
+           i.check.name = "hh_id",
            i.check.current_value = "",
            i.check.value = "",
            i.check.issue_id = case_when(
@@ -189,7 +189,7 @@ check_time_interval_btn_surveys <- function(input_tool_data, input_min_time) {
            int.time_between_survey = ceiling(int.time_between_survey)) %>%
     filter(int.time_between_survey != 0 & int.time_between_survey < input_min_time) %>%
     mutate(i.check.type = "remove_survey",
-           i.check.name = "point_number",
+           i.check.name = "hh_id",
            i.check.current_value = "",
            i.check.value = "",
            i.check.issue_id = "less_time_btn_surveys",
