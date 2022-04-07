@@ -20,5 +20,11 @@ library(lubridate)
 library(glue)
 library(leaflet)
 
+# read data
+df_sample_breakdown <- readr::read_csv(df_sample_breakdown, file = "../outputs/sample_breakdown.csv")
+
+df_tool_data <- readxl::read_excel(path = "../inputs/BNA_data.xlsx")
+
+
 ```
 
