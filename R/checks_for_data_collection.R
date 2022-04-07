@@ -312,7 +312,7 @@ df_same_value_given_for_all_fcs <- df_tool_data %>%
          cereals == protein, cereals == dairy, cereals == sugar, cereals == oils) %>% 
   mutate(i.check.type = "change_response",
          i.check.name = "cereals",
-         i.check.current_value = cereals,
+         i.check.current_value = as.character(cereals),
          i.check.value = "",
          i.check.issue_id = "logic_c_same_vale_given_for_all_fcs_10",
          i.check.issue = glue("pulses: {pulses}, vegetables: {vegetables}, fruits: {fruits}, tubers: {tubers}, protein: {protein}, dairy: {dairy}, sugar: {sugar}, oils: {oils}"),
@@ -334,7 +334,7 @@ df_very_low_consumption_of_staple_foods <- df_tool_data %>%
   filter(cereals <= 2 | tubers <= 2 | pulses <= 2 | vegetables <= 2) %>% 
   mutate(i.check.type = "change_response",
          i.check.name = "cereals",
-         i.check.current_value = cereals,
+         i.check.current_value = as.character(cereals),
          i.check.value = "",
          i.check.issue_id = "logic_c_very_low_consumption_of_staple_foods_11",
          i.check.issue = glue("pulses: {pulses}, vegetables: {vegetables}, tubers: {tubers}"),
