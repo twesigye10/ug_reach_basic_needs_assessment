@@ -59,6 +59,24 @@ df_c_duplicate_uuid <-  check_duplicates_by_uuid(input_tool_data = df_tool_data)
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_duplicate_uuid")
 
+# checks on hhids ----------------------------------------------------------
+
+sample_hhid_nos <- df_sample_data %>% 
+  pull(unique_hhid_number) %>% 
+  unique()
+
+# duplicate point numbers
+df_c_duplicate_hhid_nos <- check_duplicate_hhid_numbers(input_tool_data = df_tool_data,
+                                                        input_sample_hhid_nos_list = sample_hhid_nos)
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_duplicate_hhid_nos")
+
+# pt id does not exist in sample
+df_c_hhid_not_in_sample <- check_hhid_number_not_in_samples(input_tool_data = df_tool_data, 
+                                                            input_sample_hhid_nos_list = sample_hhid_nos)
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_hhid_not_in_sample")
+
 # Time checks -------------------------------------------------------------
 
 # Time interval for the survey
