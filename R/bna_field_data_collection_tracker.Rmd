@@ -21,15 +21,28 @@ library(glue)
 library(leaflet)
 
 # read data
-df_sample_breakdown <- readr::read_csv(df_sample_breakdown, file = "../outputs/sample_breakdown.csv")
+df_sample_breakdown <- readr::read_csv(file = "../outputs/sample_breakdown.csv") %>% 
+  mutate(hhid_code = paste0(location, "_", providers))
+
+df_for_colnames <- df_sample_breakdown %>% 
+  select(location, hhid_code) %>% 
+  unique()
 
 df_tool_data <- readxl::read_excel(path = "../inputs/BNA_data.xlsx") %>% 
   mutate(uuid = `_uuid`,
+         hh_id = str_to_lower(hh_id),
+         hhid_code = paste0(location, str_replace(string = str_replace(string = hh_id, 
+                                                                       pattern = "_[0-9]{1,2}$|-[0-9]{1,2}$", 
+                                                                       replacement = ""), 
+                                                  pattern = "^[a-z]{3}_|^[a-z]{3}-", replacement = "_")),
          start_date = as_date(start),
          start = as_datetime(start),
          end = as_datetime(end),
          latitude = as.numeric(`_geopoint_latitude`),
-         longitude = as.numeric(`_geopoint_longitude`))
+         longitude = as.numeric(`_geopoint_longitude`)) %>% 
+  filter(consent == "yes", age >= 18, start_date > as_date("2022-04-06"), 
+         !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
+  )
 
 # days that contain data
 df_days_for_data_collection <- df_tool_data %>% select(start_date) %>% unique() %>% arrange(start_date) %>% pull()
@@ -39,6 +52,11 @@ df_data_support_cl_log <- df_tool_data %>%
 # cleaning log handling
 df_cl_log <- read_csv(file = "../inputs/combined_checks_bna.csv") %>% 
   mutate(adjust_log = ifelse(is.na(adjust_log), "apply_suggested_change", adjust_log)) %>% 
+  mutate(hh_id = str_to_lower(hh_id),
+         hhid_code = paste0(location, str_replace(string = str_replace(string = hh_id, 
+                                                                       pattern = "_[0-9]{1,2}$|-[0-9]{1,2}$", 
+                                                                       replacement = ""), 
+                                                  pattern = "^[a-z]{3}_|^[a-z]{3}-", replacement = "_"))) %>% 
   left_join(df_data_support_cl_log, by = "uuid")
 
 # change_response logs that affect stats in the data collection progress
@@ -131,3 +149,35 @@ dt_enum_performance_options <- function(x){
 
 ```
 
+## Summary on the surveys done
+
+>There are **`r nrow(df_updated_tool_data)`** total number of surveys done as of **`r df_days_for_data_collection[length(df_days_for_data_collection)]`**.
+
+### Settlements:  **`r df_updated_tool_data %>% nrow()`** surveys
+
+```{r, echo = FALSE}
+df_refugee_samp_per_settlement <- df_sample_breakdown
+
+df_cl_surveys_for_deletion <- df_cl_log %>% 
+  filter(type == "remove_survey", reviewed == 1, adjust_log != "delete_log") %>%
+  group_by(location, hhid_code) %>% # could include: hhid_code
+  distinct(uuid) %>%
+  summarise(surveys_for_deletion = n())
+
+df_updated_tool_data %>% 
+  group_by(location, hhid_code) %>% 
+  summarise(number_of_surveys = n()) %>% 
+  arrange(location) %>% 
+  right_join(df_refugee_samp_per_settlement, by = "hhid_code") %>% 
+  left_join(df_cl_surveys_for_deletion, by = "hhid_code") %>% 
+  mutate(number_of_surveys = ifelse(is.na(number_of_surveys), 0, number_of_surveys),
+         surveys_for_deletion = ifelse(is.na(surveys_for_deletion), 0, surveys_for_deletion),
+         int.surveys_and_deletion = number_of_surveys - surveys_for_deletion,
+         remaining_surveys = required_samples - int.surveys_and_deletion ) %>% 
+  # left_join(df_for_colnames, by = "hhid_code") %>% 
+  # rename(location = location.x) %>%
+  # mutate(location = location.y) %>%
+  # select(-c(int.surveys_and_deletion, location.y)) %>% 
+  dt_with_modified_options()
+
+```
