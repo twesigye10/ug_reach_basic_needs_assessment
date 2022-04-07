@@ -59,7 +59,10 @@ df_cl_log <- read_csv(file = "../inputs/combined_checks_bna.csv") %>%
                                                                        pattern = "_[0-9]{1,2}$|-[0-9]{1,2}$", 
                                                                        replacement = ""), 
                                                   pattern = "^[a-z]{3}_|^[a-z]{3}-", replacement = "_"))) %>% 
-  left_join(df_data_support_cl_log, by = "uuid")
+  left_join(df_data_support_cl_log, by = "uuid")  %>% 
+  rename(location = location.x) %>% 
+  select(-location.y)
+  
 
 # change_response logs that affect stats in the data collection progress
 cl_log_change_response <- df_cl_log %>% 
@@ -158,30 +161,32 @@ dt_enum_performance_options <- function(x){
 ### Settlements:  **`r df_updated_tool_data %>% nrow()`** surveys
 
 ```{r, echo = FALSE}
-# df_refugee_samp_per_settlement <- df_sample_breakdown
-# 
-# df_cl_surveys_for_deletion <- df_cl_log %>% 
-#   filter(type == "remove_survey", reviewed == 1, adjust_log != "delete_log") %>%
-#   group_by(location, hhid_code) %>% # could include: hhid_code
-#   distinct(uuid) %>%
-#   summarise(surveys_for_deletion = n()) %>% 
-#   mutate(hhid_code = str_replace(string = hhid_code , pattern = "inc_ucc", replacement = "ucc_inc" ))
-# 
-# df_updated_tool_data %>% 
-#   group_by(location, hhid_code) %>% 
-#   summarise(number_of_surveys = n()) %>% 
-#   arrange(location) %>% 
-#   right_join(df_refugee_samp_per_settlement, by = "hhid_code") %>% 
-#   left_join(df_cl_surveys_for_deletion, by = "hhid_code") %>% 
-#   mutate(number_of_surveys = ifelse(is.na(number_of_surveys), 0, number_of_surveys),
-#          surveys_for_deletion = ifelse(is.na(surveys_for_deletion), 0, surveys_for_deletion),
-#          int.surveys_and_deletion = number_of_surveys - surveys_for_deletion,
-#          remaining_surveys = sample_size - int.surveys_and_deletion ) %>%
-#   # select(-location) %>% 
-#   # rename(location = location.x) %>%
-#   # mutate(location = location.y) %>%
-#   # select(-c(int.surveys_and_deletion, location.y)) %>%
-#   dt_with_modified_options()
+
+df_refugee_samp_per_settlement <- df_sample_breakdown
+
+df_cl_surveys_for_deletion <- df_cl_log %>%
+  filter(type == "remove_survey", reviewed == 1, adjust_log != "delete_log") %>%
+  mutate(hhid_code = str_replace(string = hhid_code , pattern = "inc_ucc", replacement = "ucc_inc" )) %>%
+  group_by(location, hhid_code) %>%
+  distinct(uuid) %>%
+  summarise(surveys_for_deletion = n())
+
+
+df_updated_tool_data %>%
+  group_by(location, hhid_code) %>%
+  summarise(number_of_surveys = n()) %>%
+  arrange(location) %>%
+  right_join(df_refugee_samp_per_settlement, by = "hhid_code") %>%
+  left_join(df_cl_surveys_for_deletion, by = "hhid_code") %>%
+  mutate(number_of_surveys = ifelse(is.na(number_of_surveys), 0, number_of_surveys),
+         surveys_for_deletion = ifelse(is.na(surveys_for_deletion), 0, surveys_for_deletion),
+         int.surveys_and_deletion = number_of_surveys - surveys_for_deletion,
+         remaining_surveys = sample_size - int.surveys_and_deletion ) %>%
+  select(-location) %>%
+  rename(location = location.x) %>%
+  mutate(location = location.y) %>%
+  select(-c(int.surveys_and_deletion, location.y)) %>%
+  dt_with_modified_options()
 
 ```
 
