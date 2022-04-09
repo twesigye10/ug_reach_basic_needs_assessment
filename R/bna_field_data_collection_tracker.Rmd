@@ -21,7 +21,7 @@ library(glue)
 library(leaflet)
 
 # read data
-df_sample_breakdown <- readr::read_csv(file = "../outputs/sample_breakdown.csv") %>% 
+df_sample_breakdown <- readr::read_csv(file = "../inputs/sample_breakdown.csv") %>% 
   mutate(providers = str_replace(string = providers, pattern = "apeal", replacement = "ape"),
          providers = str_replace(string = providers, pattern = "include", replacement = "inc"),
          hhid_code = paste0(location, "_", providers))
