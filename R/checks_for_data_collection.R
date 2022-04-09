@@ -346,7 +346,7 @@ df_very_low_consumption_of_staple_foods <- df_tool_data %>%
          i.check.other_text = "",
          i.check.checked_by = "",
          i.check.checked_date = as_date(today()),
-         i.check.comment = "Same integer given for all FCS food groups", 
+         i.check.comment = "very low consumption of staple foods", 
          i.check.reviewed = "",
          i.check.adjust_log = "",
          i.check.uuid_cl = "",
