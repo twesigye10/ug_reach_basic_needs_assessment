@@ -115,3 +115,16 @@ df_cleaned_child_marriage_outside_hh_r_data <- implement_cleaning_support(input_
   select(any_of(colnames(child_marriage_outside_hh_r)))
 
 write_csv(df_cleaned_child_marriage_outside_hh_r_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_child_marriage_outside_hh_r_data_bna.csv"))
+
+
+list_of_clean_datasets <- list("UGA2022 BNA_March2022_HH" = df_cleaned_data,
+                               "hh_roster" = df_cleaned_hh_roster_data,
+                               "children_school_aged_qns" = df_cleaned_children_school_aged_qns_data,
+                               "child_nutrition_qns" = df_cleaned_child_nutrition_qns_data,
+                               "child_marriage_outside_hh_r" = df_cleaned_child_marriage_outside_hh_r_data
+                               )
+
+openxlsx::write.xlsx(x = list_of_clean_datasets,
+                     file = paste0("outputs/", butteR::date_file_prefix(), 
+                                   "_clean_child_marriage_outside_hh_r_data_bna.xlsx"), 
+                     overwrite = TRUE)
