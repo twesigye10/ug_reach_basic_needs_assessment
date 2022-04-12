@@ -28,3 +28,19 @@ df_raw_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "UGA202
          !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
   ) %>% 
   mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
+
+df_raw_data_hh_roster <- df_raw_data %>% 
+  select(-`_index`) %>% 
+  inner_join(hh_roster, by = c("_uuid" = "_submission__uuid") ) 
+
+df_raw_data_children_school_aged_qns <- df_raw_data %>% 
+  select(-`_index`) %>% 
+  inner_join(children_school_aged_qns, by = c("_uuid" = "_submission__uuid") ) 
+
+df_raw_data_child_nutrition_qns <- df_raw_data %>% 
+  select(-`_index`) %>% 
+  inner_join(child_nutrition_qns, by = c("_uuid" = "_submission__uuid") ) 
+
+df_raw_data_child_marriage_outside_hh_r <- df_raw_data %>% 
+  select(-`_index`) %>% 
+  inner_join(child_marriage_outside_hh_r, by = c("_uuid" = "_submission__uuid") ) 
