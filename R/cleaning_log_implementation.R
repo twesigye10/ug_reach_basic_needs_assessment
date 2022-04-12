@@ -59,3 +59,11 @@ df_cleaning_log <- read_csv("inputs/combined_checks_bna.csv", col_types = cols(s
 # survey tool
 df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
+
+# main dataset
+df_cleaned_data <- implement_cleaning_support(input_df_raw_data = df_raw_data, 
+                                              input_df_survey = df_survey, 
+                                              input_df_choices = df_choices, 
+                                              input_df_cleaning_log = df_cleaning_log %>% filter(name %in% colnames(df_raw_data)))
+
+write_csv(df_cleaned_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_data_bna.csv"))
