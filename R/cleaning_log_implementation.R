@@ -92,17 +92,17 @@ df_cleaned_children_school_aged_qns_data <- implement_cleaning_support(input_df_
 
 write_csv(df_cleaned_children_school_aged_qns_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_children_school_aged_qns_data_bna.csv"))
 
-# hh_roster
-df_cleaning_log_hh_roster <- df_cleaning_log %>% 
-  filter(uuid %in% df_raw_data_hh_roster$`_uuid`, name %in% colnames(df_raw_data_hh_roster))
+# child_nutrition_qns
+df_cleaning_log_child_nutrition_qns <- df_cleaning_log %>% 
+  filter(uuid %in% df_raw_data_child_nutrition_qns$`_uuid`, name %in% colnames(df_raw_data_child_nutrition_qns))
 
-df_cleaned_hh_roster_data <- implement_cleaning_support(input_df_raw_data = df_raw_data_hh_roster, 
+df_cleaned_child_nutrition_qns_data <- implement_cleaning_support(input_df_raw_data = df_raw_data_child_nutrition_qns, 
                                                                                     input_df_survey = df_survey, 
                                                                                     input_df_choices = df_choices, 
-                                                                                    input_df_cleaning_log = df_cleaning_log_hh_roster) %>% 
-  select(any_of(colnames(hh_roster)))
+                                                                                    input_df_cleaning_log = df_cleaning_log_child_nutrition_qns) %>% 
+  select(any_of(colnames(child_nutrition_qns)))
 
-write_csv(df_cleaned_hh_roster_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_hh_roster_data_bna.csv"))
+write_csv(df_cleaned_child_nutrition_qns_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_child_nutrition_qns_data_bna.csv"))
 
 # hh_roster
 df_cleaning_log_hh_roster <- df_cleaning_log %>% 
