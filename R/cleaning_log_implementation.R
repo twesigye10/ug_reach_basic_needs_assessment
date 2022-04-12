@@ -55,3 +55,7 @@ df_cleaning_log <- read_csv("inputs/combined_checks_bna.csv", col_types = cols(s
   mutate(value = ifelse(value == "blank" & comment == "implement_logical_change", NA, value),
          relevant = NA) %>% 
   select(uuid, type, name, value, issue_id, sheet, index, relevant, issue)
+
+# survey tool
+df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
+df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
