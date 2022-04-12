@@ -24,7 +24,7 @@ data_nms <- names(readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "UGA
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
 df_raw_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "UGA2022 BNA_March2022_HH", col_types = c_types) %>% 
-  filter(consent == "yes", age >= 18, i.check.start_date > as_date("2022-04-06"), 
+  filter(consent == "yes", age >= 18, as_date(start) > as_date("2022-04-06"), 
          !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
   ) %>% 
   mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
