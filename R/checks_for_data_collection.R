@@ -420,7 +420,7 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_no
 # no_child_performs_economic_labor_but_reports_economic_labor
 
 df_no_child_performs_economic_labor_but_reports_economic_labor <- df_repeat_children_school_aged_qns_data %>%
-  group_by("_parent_index") %>%
+  group_by(`_parent_index`) %>%
   filter(!str_detect(string = paste(child_economic_labor, collapse = " : "), pattern = "yes"),
          str_detect(string = non_attending_reason, pattern = "child_economic_labor")) %>%
   mutate(i.check.type = "remove_loop_entry",
