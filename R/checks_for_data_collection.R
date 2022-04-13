@@ -386,7 +386,9 @@ df_reported_no_consumption_for_child <- df_repeat_child_nutrition_qns_data %>%
          i.check.reviewed = "",
          i.check.adjust_log = "",
          i.check.uuid_cl = "",
-         i.check.so_sm_choices = "") %>% 
+         i.check.so_sm_choices = "",
+         i.check.sheet = "child_nutrition_qns",
+         i.check.index = `_index`) %>% 
   dplyr::select(starts_with("i.check")) %>% 
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
@@ -411,7 +413,9 @@ df_no_child_performs_domestic_labor_but_reports_domestic_labor <- df_repeat_chil
          i.check.reviewed = "",
          i.check.adjust_log = "",
          i.check.uuid_cl = "",
-         i.check.so_sm_choices = "") %>%
+         i.check.so_sm_choices = "",
+         i.check.sheet = "children_school_aged_qns",
+         i.check.index = `_index`) %>%
   dplyr::select(starts_with("i.check")) %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
@@ -436,7 +440,9 @@ df_no_child_performs_economic_labor_but_reports_economic_labor <- df_repeat_chil
          i.check.reviewed = "",
          i.check.adjust_log = "",
          i.check.uuid_cl = "",
-         i.check.so_sm_choices = "") %>%
+         i.check.so_sm_choices = "",
+         i.check.sheet = "children_school_aged_qns",
+         i.check.index = `_index`) %>%
   dplyr::select(starts_with("i.check")) %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
