@@ -61,7 +61,8 @@ df_cl_log <- read_csv(file = "../inputs/combined_checks_bna.csv") %>%
                                                   pattern = "^[a-z]{3}_|^[a-z]{3}-", replacement = "_"))) %>% 
   left_join(df_data_support_cl_log, by = "uuid")  %>% 
   rename(location = location.x) %>% 
-  select(-location.y)
+  select(-location.y) %>% 
+  filter(uuid %in% df_tool_data$uuid)
   
 
 # change_response logs that affect stats in the data collection progress
