@@ -53,7 +53,7 @@ df_cleaning_log <- read_csv("inputs/combined_checks_bna.csv", col_types = cols(s
          value = ifelse(is.na(value) & type == "remove_survey", "blank", value)) %>%
   filter(adjust_log != "delete_log", !is.na(value), !is.na(uuid)) %>% 
   mutate(value = ifelse(value == "blank" & comment == "implement_logical_change", NA, value),
-         relevant = NA) %>% 
+         sheet = NA, index = NA, relevant = NA) %>% 
   select(uuid, type, name, value, issue_id, sheet, index, relevant, issue)
 
 # survey tool
@@ -126,5 +126,5 @@ list_of_clean_datasets <- list("UGA2022 BNA_March2022_HH" = df_cleaned_data,
 
 openxlsx::write.xlsx(x = list_of_clean_datasets,
                      file = paste0("outputs/", butteR::date_file_prefix(), 
-                                   "_clean_child_marriage_outside_hh_r_data_bna.xlsx"), 
+                                   "_clean_data_bna.xlsx"), 
                      overwrite = TRUE)
