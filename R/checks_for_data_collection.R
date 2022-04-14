@@ -134,7 +134,7 @@ df_un_reliable_enumerator <- df_tool_data %>%
   filter(enumerator_id %in% c("110")) %>% 
   mutate(i.check.type = "remove_survey",
          i.check.name = "enumerator_id",
-         i.check.current_value = enumerator_id,
+         i.check.current_value = as.character(enumerator_id),
          i.check.value = "",
          i.check.issue_id = "logic_m_un_reliable_enumerator",
          i.check.issue = "un_reliable_enumerator",
@@ -150,7 +150,6 @@ df_un_reliable_enumerator <- df_tool_data %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_un_reliable_enumerator")
-
 
 
 # Time checks -------------------------------------------------------------
