@@ -16,7 +16,7 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
          i.check.hh_id = hh_id,
          start = as_datetime(start),
          end = as_datetime(end)) %>% 
-  filter(consent == "yes", age >= 18, i.check.start_date > as_date("2022-04-06"), 
+  filter(consent == "yes", age >= 18, i.check.start_date > as_date("2022-04-05"), 
          !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
   )
 
