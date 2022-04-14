@@ -42,7 +42,7 @@ df_tool_data <- readxl::read_excel(path = "../inputs/BNA_data.xlsx") %>%
          end = as_datetime(end),
          latitude = as.numeric(`_geopoint_latitude`),
          longitude = as.numeric(`_geopoint_longitude`)) %>% 
-  filter(consent == "yes", age >= 18, start_date > as_date("2022-04-06"), 
+  filter(consent == "yes", age >= 18, start_date > as_date("2022-04-05"), 
          !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
   )
 
