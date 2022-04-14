@@ -15,10 +15,7 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
          i.check.location = location,
          i.check.hh_id = hh_id,
          start = as_datetime(start),
-         end = as_datetime(end)) %>% 
-  filter(consent == "yes", age >= 18, i.check.start_date > as_date("2022-04-05"), 
-         !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
-  )
+         end = as_datetime(end))
 
 df_repeat_child_nutrition_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_nutrition_qns")
 
@@ -62,6 +59,31 @@ df_c_hhid_not_in_sample <- check_hhid_number_not_in_samples(input_tool_data = df
                                                             input_sample_hhid_nos_list = sample_hhid_nos)
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_hhid_not_in_sample")
+
+
+# data not meeting minimum requirements -----------------------------------
+df_respondents_not_of_age <- df_tool_data %>% 
+  filter(age < 18) %>% 
+  mutate(i.check.type = "remove_survey",
+         i.check.name = "age",
+         i.check.current_value = age,
+         i.check.value = "",
+         i.check.issue_id = "logic_m_requirement_below_age",
+         i.check.issue = "below_age",
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "", 
+         i.check.reviewed = "1",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_respondents_not_of_age")
+
+
 
 # Time checks -------------------------------------------------------------
 
