@@ -62,11 +62,35 @@ add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_
 
 
 # data not meeting minimum requirements -----------------------------------
+
+# no_consent_not_hoh
+df_no_consent_not_hoh <- df_tool_data %>% 
+  filter(hoh == "no") %>% 
+  mutate(i.check.type = "remove_survey",
+         i.check.name = "hoh",
+         i.check.current_value = as.character(hoh),
+         i.check.value = "",
+         i.check.issue_id = "logic_m_requirement_no_consent_not_hoh",
+         i.check.issue = "no_consent_not_hoh",
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "", 
+         i.check.reviewed = "1",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_no_consent_not_hoh")
+
+# below_age
 df_respondents_not_of_age <- df_tool_data %>% 
   filter(age < 18) %>% 
   mutate(i.check.type = "remove_survey",
          i.check.name = "age",
-         i.check.current_value = age,
+         i.check.current_value = as.character(age),
          i.check.value = "",
          i.check.issue_id = "logic_m_requirement_below_age",
          i.check.issue = "below_age",
@@ -82,6 +106,50 @@ df_respondents_not_of_age <- df_tool_data %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_respondents_not_of_age")
+
+# testing_data
+df_testing_data <- df_tool_data %>% 
+  filter(i.check.start_date < as_date("2022-04-06") | str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))) %>% 
+  mutate(i.check.type = "remove_survey",
+         i.check.name = "",
+         i.check.current_value = "",
+         i.check.value = "",
+         i.check.issue_id = "logic_m_testing_data",
+         i.check.issue = "testing_data",
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "", 
+         i.check.reviewed = "1",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_testing_data")
+
+# un_reliable_enumerator
+df_un_reliable_enumerator <- df_tool_data %>% 
+  filter(enumerator_id %in% c("110")) %>% 
+  mutate(i.check.type = "remove_survey",
+         i.check.name = "enumerator_id",
+         i.check.current_value = enumerator_id,
+         i.check.value = "",
+         i.check.issue_id = "logic_m_un_reliable_enumerator",
+         i.check.issue = "un_reliable_enumerator",
+         i.check.other_text = "",
+         i.check.checked_by = "",
+         i.check.checked_date = as_date(today()),
+         i.check.comment = "", 
+         i.check.reviewed = "1",
+         i.check.adjust_log = "",
+         i.check.uuid_cl = "",
+         i.check.so_sm_choices = "") %>% 
+  dplyr::select(starts_with("i.check")) %>% 
+  rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
+
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_un_reliable_enumerator")
 
 
 
