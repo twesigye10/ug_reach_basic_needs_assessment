@@ -632,12 +632,26 @@ df_c_outliers_children_school_aged_qns_script_child_economic_labor_hours <- chec
                                                                                            input_sheet_name = "children_school_aged_qns")
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_outliers_children_school_aged_qns_script_child_economic_labor_hours")
 
-# integer	child_married_outside_hh_number
+# child_married_outside_hh_number
 df_c_outliers_main_script_child_married_outside_hh_number <- check_outliers(input_tool_data = df_raw_data,
                                                                             input_column = "child_married_outside_hh_number", 
                                                                             input_lower_limit = quantile(df_raw_data$child_married_outside_hh_number, 0.01, na.rm = TRUE),
                                                                             input_upper_limit = quantile(df_raw_data$child_married_outside_hh_number, 0.99, na.rm = TRUE))
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_outliers_main_script_child_married_outside_hh_number")
+
+# num_children_for_mdd
+df_c_outliers_main_script_num_children_for_mdd <- check_outliers(input_tool_data = df_raw_data,
+                                                                 input_column = "num_children_for_mdd", 
+                                                                 input_lower_limit = quantile(df_raw_data$num_children_for_mdd, 0.01, na.rm = TRUE),
+                                                                 input_upper_limit = quantile(df_raw_data$num_children_for_mdd, 0.99, na.rm = TRUE))
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_outliers_main_script_num_children_for_mdd")
+
+# num_children_school_aged
+df_c_outliers_main_script_num_children_school_aged <- check_outliers(input_tool_data = df_raw_data,
+                                                                     input_column = "num_children_school_aged", 
+                                                                     input_lower_limit = quantile(df_raw_data$num_children_school_aged, 0.01, na.rm = TRUE),
+                                                                     input_upper_limit = quantile(df_raw_data$num_children_school_aged, 0.99, na.rm = TRUE))
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_outliers_main_script_num_children_school_aged")
 
 # combined logical checks ----------------------------------------------------------
 
