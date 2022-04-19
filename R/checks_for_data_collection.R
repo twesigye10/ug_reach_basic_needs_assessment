@@ -19,11 +19,17 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
 
 df_repeat_child_nutrition_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_nutrition_qns")
 
+repeat_hh_roster <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "hh_roster") 
+
+df_repeat_hh_roster_data <- df_tool_data %>% 
+  select(-`_index`) %>% 
+  inner_join(repeat_hh_roster, by = c("_uuid" = "_submission__uuid"))
+
 repeat_children_school_aged_qns <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "children_school_aged_qns") 
 
 df_repeat_children_school_aged_qns_data <- df_tool_data %>% 
   select(-`_index`) %>% 
-  right_join(repeat_children_school_aged_qns, by = c("_uuid" = "_submission__uuid"))
+  inner_join(repeat_children_school_aged_qns, by = c("_uuid" = "_submission__uuid"))
 
 df_survey <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "survey")
 df_choices <- readxl::read_excel("inputs/BNA_quant_tool.xlsx", sheet = "choices")
@@ -172,7 +178,8 @@ df_c_time_btn_survey <- check_time_interval_btn_surveys(input_tool_data = df_too
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_time_btn_survey")
 
-# others checks
+
+# others checks -----------------------------------------------------------
 
 df_others_data <- extract_other_data(input_tool_data = df_tool_data, 
                                      input_survey = df_survey, 
@@ -602,6 +609,19 @@ df_no_children_in_hh_but_reports_school_withdrawn_chilren <- df_tool_data %>%
   rename_with(~str_replace(string = .x, pattern = "i.check.", replacement = ""))
 
 add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_no_children_in_hh_but_reports_school_withdrawn_chilren")
+
+
+
+# outlier checks ----------------------------------------------------------
+
+# integer	months [hh_roster]
+# ** age_months **
+df_c_outliers_hh_roster_script_age_months <- check_outliers_repeats(input_tool_data = df_repeat_hh_roster_data,
+                                                                    input_column = "age_months", 
+                                                                    input_lower_limit = quantile(df_repeat_hh_roster_data$age_months, 0.01, na.rm = TRUE),
+                                                                    input_upper_limit = quantile(df_repeat_hh_roster_data$age_months, 0.99, na.rm = TRUE),
+                                                                    input_sheet_name = "hh_roster")
+add_checks_data_to_list(input_list_name = "logic_outlier_output", input_df_name = "df_c_outliers_hh_roster_script_age_months")
 
 # combined logical checks ----------------------------------------------------------
 
