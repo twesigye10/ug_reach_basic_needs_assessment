@@ -76,7 +76,7 @@ df_cleaned_hh_roster_data <- implement_cleaning_support(input_df_raw_data = df_r
                                                                                     input_df_survey = df_survey, 
                                                                                     input_df_choices = df_choices, 
                                                                                     input_df_cleaning_log = df_cleaning_log_hh_roster) %>% 
-  select(any_of(colnames(hh_roster)))
+  select(any_of(colnames(hh_roster)), `_index` = index, `_submission__uuid` = uuid)
 
 write_csv(df_cleaned_hh_roster_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_hh_roster_data_bna.csv"))
 
@@ -88,7 +88,7 @@ df_cleaned_children_school_aged_qns_data <- implement_cleaning_support(input_df_
                                                                                     input_df_survey = df_survey, 
                                                                                     input_df_choices = df_choices, 
                                                                                     input_df_cleaning_log = df_cleaning_log_children_school_aged_qns) %>% 
-  select(any_of(colnames(children_school_aged_qns)))
+  select(any_of(colnames(children_school_aged_qns)), `_index` = index, `_submission__uuid` = uuid)
 
 write_csv(df_cleaned_children_school_aged_qns_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_children_school_aged_qns_data_bna.csv"))
 
@@ -100,7 +100,7 @@ df_cleaned_child_nutrition_qns_data <- implement_cleaning_support(input_df_raw_d
                                                                                     input_df_survey = df_survey, 
                                                                                     input_df_choices = df_choices, 
                                                                                     input_df_cleaning_log = df_cleaning_log_child_nutrition_qns) %>% 
-  select(any_of(colnames(child_nutrition_qns)))
+  select(any_of(colnames(child_nutrition_qns)), `_index` = index, `_submission__uuid` = uuid)
 
 write_csv(df_cleaned_child_nutrition_qns_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_child_nutrition_qns_data_bna.csv"))
 
@@ -112,7 +112,7 @@ df_cleaned_child_marriage_outside_hh_r_data <- implement_cleaning_support(input_
                                                                                     input_df_survey = df_survey, 
                                                                                     input_df_choices = df_choices, 
                                                                                     input_df_cleaning_log = df_cleaning_log_child_marriage_outside_hh_r) %>% 
-  select(any_of(colnames(child_marriage_outside_hh_r)))
+  select(any_of(colnames(child_marriage_outside_hh_r)), `_index` = index, `_submission__uuid` = uuid) 
 
 write_csv(df_cleaned_child_marriage_outside_hh_r_data, file = paste0("outputs/", butteR::date_file_prefix(), "_clean_child_marriage_outside_hh_r_data_bna.csv"))
 
