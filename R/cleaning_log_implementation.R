@@ -8,13 +8,16 @@ source("R/support_functions.R")
 
 # sheets
 
-hh_roster <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "hh_roster")
+hh_roster <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "hh_roster") %>% 
+  mutate(name = openssl::md5(name))
 
 children_school_aged_qns <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "children_school_aged_qns") %>% 
-  mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
+  mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)),
+         child_name_edu = openssl::md5(child_name_edu))
 
 child_nutrition_qns <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_nutrition_qns") %>% 
-  mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
+  mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)),
+         child_name_nut = openssl::md5(child_name_nut))
 
 child_marriage_outside_hh_r <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_marriage_outside_hh_r") %>% 
   mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
