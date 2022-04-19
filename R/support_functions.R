@@ -284,7 +284,7 @@ check_outliers_repeats <- function(input_tool_data, input_column, input_lower_li
            i.check.type = "change_response",
            i.check.name = input_column,
            i.check.current_value = as.character(!!sym({{input_column}})),
-           i.check.value = "",
+           i.check.value = "NA",
            i.check.index = `_index`,
            i.check.issue_id = "logic_c_outlier",
            i.check.issue = paste(input_column,": ",!!sym({{input_column}}), "seems to be an outlier, needs confirmation"),
