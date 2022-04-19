@@ -19,7 +19,8 @@ df_tool_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx") %>%
 
 df_repeat_child_nutrition_qns_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "child_nutrition_qns")
 
-repeat_hh_roster <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "hh_roster") 
+repeat_hh_roster <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "hh_roster") %>% 
+  mutate(age_months = as.numeric(age_months))
 
 df_repeat_hh_roster_data <- df_tool_data %>% 
   select(-`_index`) %>% 
@@ -621,7 +622,22 @@ df_c_outliers_hh_roster_script_age_months <- check_outliers_repeats(input_tool_d
                                                                     input_lower_limit = quantile(df_repeat_hh_roster_data$age_months, 0.01, na.rm = TRUE),
                                                                     input_upper_limit = quantile(df_repeat_hh_roster_data$age_months, 0.99, na.rm = TRUE),
                                                                     input_sheet_name = "hh_roster")
-add_checks_data_to_list(input_list_name = "logic_outlier_output", input_df_name = "df_c_outliers_hh_roster_script_age_months")
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_outliers_hh_roster_script_age_months")
+
+# integer	child_economic_labor_hours [children_school_aged_qns]
+df_c_outliers_children_school_aged_qns_script_child_economic_labor_hours <- check_outliers_repeats(input_tool_data = df_repeat_children_school_aged_qns_data,
+                                                                                           input_column = "child_economic_labor_hours", 
+                                                                                           input_lower_limit = quantile(df_repeat_children_school_aged_qns_data$child_economic_labor_hours, 0.01, na.rm = TRUE),
+                                                                                           input_upper_limit = quantile(df_repeat_children_school_aged_qns_data$child_economic_labor_hours, 0.99, na.rm = TRUE), 
+                                                                                           input_sheet_name = "children_school_aged_qns")
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_outliers_children_school_aged_qns_script_child_economic_labor_hours")
+
+# integer	child_married_outside_hh_number
+df_c_outliers_main_script_child_married_outside_hh_number <- check_outliers(input_tool_data = df_raw_data,
+                                                                            input_column = "child_married_outside_hh_number", 
+                                                                            input_lower_limit = quantile(df_raw_data$child_married_outside_hh_number, 0.01, na.rm = TRUE),
+                                                                            input_upper_limit = quantile(df_raw_data$child_married_outside_hh_number, 0.99, na.rm = TRUE))
+add_checks_data_to_list(input_list_name = "logic_output", input_df_name = "df_c_outliers_main_script_child_married_outside_hh_number")
 
 # combined logical checks ----------------------------------------------------------
 
