@@ -27,9 +27,6 @@ data_nms <- names(readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "UGA
 c_types <- ifelse(str_detect(string = data_nms, pattern = "_other$"), "text", "guess")
 
 df_raw_data <- readxl::read_excel(path = "inputs/BNA_data.xlsx", sheet = "UGA2022 BNA_March2022_HH", col_types = c_types) %>% 
-  filter(consent == "yes", age >= 18, as_date(start) > as_date("2022-04-05"), 
-         !str_detect(string = hh_id, pattern = fixed('test', ignore_case = TRUE))
-  ) %>% 
   mutate(across(.cols = everything(), .fns = ~ifelse(str_detect(string = ., pattern = fixed(pattern = "N/A", ignore_case = TRUE)), "NA", .)))
 
 df_raw_data_hh_roster <- df_raw_data %>% 
@@ -49,14 +46,16 @@ df_raw_data_child_marriage_outside_hh_r <- df_raw_data %>%
   inner_join(child_marriage_outside_hh_r, by = c("_uuid" = "_submission__uuid") ) 
 
 # cleaning log
-df_cleaning_log <- read_csv("inputs/combined_checks_bna.csv", col_types = cols(sheet = "c", index = "i")) %>% 
+df_cleaning_log <- read_csv("inputs/combined_checks_bna.csv", col_types = cols(sheet = "c", index = "i")) %>%
+  filter(!adjust_log %in% c("delete_log")) %>%
   mutate(adjust_log = ifelse(is.na(adjust_log), "apply_suggested_change", adjust_log),
-         value = ifelse(is.na(value) & comment == "implement_logical_change", "blank", value),
-         value = ifelse(is.na(value) & issue_id %in% c("logic_c_outlier"), "blank", value),
-         value = ifelse(is.na(value) & type == "remove_survey", "blank", value)) %>%
-  filter(adjust_log != "delete_log", !is.na(value), !is.na(uuid)) %>% 
-  mutate(value = ifelse(value == "blank" & comment == "implement_logical_change", NA, value),
-         relevant = NA) %>% 
+         value = ifelse(is.na(value) & str_detect(string = issue_id, pattern = "logic_c_"), "blank", value),
+         value = ifelse(type %in% c("remove_survey"), "blank", value),
+         name = ifelse(is.na(name) & type %in% c("remove_survey"), "hh_id", name)
+         ) %>%
+  filter(!is.na(value), !is.na(uuid)) %>%
+  mutate(value = ifelse(value %in% c("blank"), NA, value),
+         relevant = NA) %>%
   select(uuid, type, name, value, issue_id, sheet, index, relevant, issue)
 
 # survey tool
@@ -130,4 +129,4 @@ list_of_clean_datasets <- list("UGA2022 BNA_March2022_HH" = df_cleaned_data,
 openxlsx::write.xlsx(x = list_of_clean_datasets,
                      file = paste0("outputs/", butteR::date_file_prefix(), 
                                    "_clean_data_bna.xlsx"), 
-                     overwrite = TRUE)
+                     overwrite = TRUE, keepNA = TRUE, na.string = "NA")
