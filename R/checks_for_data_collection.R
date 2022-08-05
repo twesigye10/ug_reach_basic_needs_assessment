@@ -123,7 +123,7 @@ df_testing_data <- df_tool_data %>%
          i.check.name = "",
          i.check.current_value = "",
          i.check.value = "",
-         i.check.issue_id = "logic_m_testing_data",
+         i.check.issue_id = "logic_c_testing_data",
          i.check.issue = "testing_data",
          i.check.other_text = "",
          i.check.checked_by = "",
