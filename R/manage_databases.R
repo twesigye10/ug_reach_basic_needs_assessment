@@ -10,6 +10,8 @@ support_replacement <- function(input_df, input_selection_str = "i.", input_repl
     dplyr::rename_with(.fn = ~str_replace(string = .x, pattern = input_selection_str, replacement =  input_replacement_str))
 }
 
+merged_data_list <- list()
+
 # APEAL -------------------------------------------------------------------
 db_loc_apeal <- "support_files/databases/APEAL IV Beneficiary Database.xlsx"
 df_apeal <- readxl::read_excel(path = db_loc_apeal, sheet = "APEAL PROJECT", skip = 1) |> 
@@ -29,7 +31,8 @@ df_apeal <- readxl::read_excel(path = db_loc_apeal, sheet = "APEAL PROJECT", ski
          i.implementing_agency = implementing_agency
          ) |> 
   support_replacement()
-colnames(df_apeal)
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_apeal")
 
 
 # DPR ---------------------------------------------------------------------
@@ -81,7 +84,7 @@ df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
   support_replacement() |> 
   filter(sheet_name == "General")
   
-colnames(df_dpr2)
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 db_loc_dpr_mpc_rhino <- "support_files/databases/DPR_MPCT Beneficiary List for Rhino Camp Settlement.xlsx"
 df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |> 
@@ -98,7 +101,7 @@ df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |>
          ) |> 
   support_replacement()
 
-colnames(df_dpr_mpc_rhino)
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 db_loc_dpr_mpc_imvepi <- "support_files/databases/DPR_MPCT Beneficiary List_Imvepi refugee settlement.xlsx"
 df_dpr_mpc_imvepi <- readxl::read_excel(path = db_loc_dpr_mpc_imvepi, skip = 3) |> 
@@ -114,28 +117,11 @@ df_dpr_mpc_imvepi <- readxl::read_excel(path = db_loc_dpr_mpc_imvepi, skip = 3) 
   ) |> 
   support_replacement()
 
-colnames(df_dpr_mpc_imvepi)
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 # EQUATE ------------------------------------------------------------------
 
 db_loc_equate <- "support_files/databases/EQUATE Beneficary List-23.01.2023.xlsx"
-# df_equate_Palabek <- readxl::read_excel(path = db_loc_equate, sheet = "Palabek", skip = 1) |> 
-#   mutate(settlement = "Palabek", sheet_name = "Palabek")
-# df_equate_Rhino <- readxl::read_excel(path = db_loc_equate, sheet = "Rhino", skip = 1) |> 
-#   mutate(settlement = "Rhino camp", sheet_name = "Rhino camp")
-# df_equate_Imvepi <- readxl::read_excel(path = db_loc_equate, sheet = "Imvepi", skip = 1) |> 
-#   mutate(settlement = "Imvepi", sheet_name = "Imvepi")
-# 
-# df_equate = bind_rows(df_equate_Palabek, df_equate_Rhino, df_equate_Imvepi) |> 
-#   clean_names() |> 
-# mutate(i.dataset_desc = "EQUATE Beneficary List",
-#        i.sheet_name = sheet_name,
-#        i.beneficiary_name = name,
-#        i.gender = gender,
-#        i.settlement = settlement,
-#        i.mobile_phone = contact
-# ) |>
-# support_replacement()
 
 df_equate <- purrr::map2_df(.x = rio::import_list(db_loc_equate, skip =1),
                             .y = readxl::excel_sheets(db_loc_equate),
@@ -154,34 +140,11 @@ df_equate <- purrr::map2_df(.x = rio::import_list(db_loc_equate, skip =1),
   ) |>
   support_replacement()
   
-colnames(df_equate)
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 # INCLUDE -----------------------------------------------------------------
 # df_include
 db_loc_include_cash <- "support_files/databases/INCLUDE_Cash Beneficiary List Term III 2022_ Kyaka II Rhino and Imvepi v.xlsx"
-# df_include_cash_Scholastic_Primary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Scholastic-Primary", skip = 3) |> 
-#   mutate(sheet_name = "Cash for Scholastic-Primary")
-# df_include_cash_Education_Primary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Education - Primary", skip = 3) |> 
-#   mutate(sheet_name = "Cash for Education - Primary")
-# df_include_cash_Scholastics_Secondary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Scholastics Secondary", skip = 3) |> 
-#   mutate(sheet_name = "Cash for Scholastics Secondary")
-# df_include_cash_Education_Secondary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Education Secondary", skip = 3) |> 
-#   mutate(sheet_name = "Cash for Education Secondary")
-# 
-# df_include <- bind_rows(df_include_cash_Scholastic_Primary,
-#                         df_include_cash_Education_Primary,
-#                         df_include_cash_Scholastics_Secondary,
-#                         df_include_cash_Education_Secondary) |> 
-#   clean_names() |> 
-#   mutate(i.dataset_desc = "INCLUDE_Cash Beneficiary List Term III 2022",
-#          i.sheet_name = sheet_name,
-#          i.beneficiary_name = name_of_household_head,
-#          i.household_no = household_number,
-#          i.individual_no = individual_number,
-#          i.settlement = settlement
-#   ) |>
-#   support_replacement()
-
 
 df_include <- purrr::map2_df(.x = rio::import_list(db_loc_include_cash, skip = 3),
                             .y = readxl::excel_sheets(db_loc_include_cash),
@@ -200,7 +163,7 @@ df_include <- purrr::map2_df(.x = rio::import_list(db_loc_include_cash, skip = 3
   ) |>
   support_replacement()
 
-colnames(df_include_cash)
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 # db_loc_include_nrc
 db_loc_include_nrc <- "support_files/databases/INCLUDE_NRC consolidated Cash beneficiary_Omugo-Rhino Camp  Nakivale.xlsx"
@@ -225,8 +188,9 @@ df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
   ) |>
   support_replacement()
 
-colnames(df_include_nrc)
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
+# db_loc_include_scholastics
 db_loc_include_scholastics <- "support_files/databases/INCLUDE_Scholastics+EiE Paid (Equity)_ Kyangwali list 1_ Term II.xlsx"
 # df_include_scholastics <- readxl::read_excel(path = db_loc_include_scholastics, skip = 4)
 
@@ -249,9 +213,9 @@ df_include_scholastics <- purrr::map2_df(.x = rio::import_list(db_loc_include_sc
   ) |>
   support_replacement()
 
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
-colnames(df_include_scholastics)
-
+# db_loc_include_scholastics2
 db_loc_include_scholastics2 <- "support_files/databases/INCLUDE_Scholistics + EiE Paid Beyonic_ Kyangwali List 2_ Term II.xlsx"
 
 df_include_scholastics2 <- purrr::map2_df(.x = rio::import_list(db_loc_include_scholastics2, skip = 4),
@@ -273,45 +237,89 @@ df_include_scholastics2 <- purrr::map2_df(.x = rio::import_list(db_loc_include_s
   ) |>
   support_replacement()
 
-
-colnames(df_include_scholastics2)
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 # Legal Assistance --------------------------------------------------------
 db_loc_la <- "support_files/databases/Legal Assistance Data base  Rhino Camp 2021-2022.xlsx"
-df_la <- readxl::read_excel(path = db_loc_la, skip = 1)
-colnames(df_la)
+
+# in some sheets, the first row is empty while others are completely empty
+
+xl_sheets_list <- c("June 2021", "July 2021", "Aug 2021", "Sept 2021", "Oct 2021", "Nov 2021",
+                     "April 2022", "May 2022", "June 2022", "July 2022", "August 2022", "September 2022", "October 2022"
+                     )
+
+# xl_sheets_to_consider <- readxl::excel_sheets(db_loc_la)[readxl::excel_sheets(db_loc_la) %in% xl_sheets_list]
+
+df_la <- purrr::map2_df(.x = rio::import_list(db_loc_la, which = xl_sheets_list),
+                                          .y = xl_sheets_list,
+                                          ~{  .x  |>  
+                                              dplyr::mutate(sheet_name = .y,
+                                                            Age = as.character(Age)) |> 
+                                              clean_names() |> 
+                                              select(-c(21))
+                                          }) |> 
+  as_tibble() |> 
+  mutate(i.dataset_desc = "Legal Assistance Data base  Rhino Camp",
+         i.sheet_name = sheet_name,
+         i.beneficiary_name = ifelse(is.na(beneficary_name) & !is.na(cleints_name), cleints_name, beneficary_name) ,
+         i.age_band = age,
+         i.gender = gender,
+         i.individual_no = individual_number,
+         i.settlement = area_settlement,
+         i.zone = zone_village,
+         i.mobile_phone = telephone,
+         i.nationality = counrty_of_origin
+  ) |>
+  support_replacement()
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 # NRC ---------------------------------------------------------------------
 db_loc_nrc_isingiro <- "support_files/databases/NRC_Isingiro Beneficiaries' EXCEL database 2022.xlsx"
 df_nrc_isingiro <- readxl::read_excel(path = db_loc_nrc_isingiro)
 colnames(df_nrc_isingiro)
 
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
 db_loc_nrc_la <- "support_files/databases/NRC_Legal Assistance Data base  Rhino Camp 2021-2022 copy.xlsx"
 df_nrc_la <- readxl::read_excel(path = db_loc_nrc_la, skip = 1)
 colnames(df_nrc_la)
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 # UCC ---------------------------------------------------------------------
 db_loc_ucc_mpct_22_23 <- "support_files/databases/UCC MPCT Beneficiaries July 2022-2023.xlsx"
 df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23)
 colnames(df_ucc_mpct_22_23)
 
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
 db_loc_ucc_mpct_21_22_kyangwali <- "support_files/databases/UCC MPCT Beneficiary List Aug 2021- June 2022 Kyangwali.xlsx"
 df_ucc_mpct_21_22_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_21_22_kyangwali, skip = 8)
 colnames(df_ucc_mpct_21_22_kyangwali)
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 db_loc_ucc_mpct_22_23_palabek <- "support_files/databases/UCC MPCT Beneficiary List Aug 2022-2023 Palabek.xlsx"
 df_ucc_mpct_22_23_palabek <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_palabek, skip = 8)
 colnames(df_ucc_mpct_22_23_palabek)
 
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
 db_loc_ucc_mpct_21_22 <- "support_files/databases/UCC MPCT Beneficiary list JUN 2021-AUG 2022.xlsx"
 df_ucc_mpct_21_22 <- readxl::read_excel(path = db_loc_ucc_mpct_21_22)
 colnames(df_ucc_mpct_21_22)
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
 
 db_loc_ucc_mpct_22_23_kyaka <- "support_files/databases/UCC MPCT Beneficiary List Kyaka Aug 2022- 2023.xlsx"
 df_ucc_mpct_22_23_kyaka <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyaka, skip = 9)
 colnames(df_ucc_mpct_22_23_kyaka)
 
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
 db_loc_ucc_mpct_22_23_kyangwali <- "support_files/databases/UCC MPCT Beneficiary List Kyangwali Aug 2022-2023.xlsx"
 df_ucc_mpct_22_23_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyangwali, skip = 1)
 colnames(df_ucc_mpct_22_23_kyangwali)
 
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
