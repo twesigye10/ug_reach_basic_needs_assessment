@@ -159,19 +159,37 @@ colnames(df_equate)
 # INCLUDE -----------------------------------------------------------------
 # df_include
 db_loc_include_cash <- "support_files/databases/INCLUDE_Cash Beneficiary List Term III 2022_ Kyaka II Rhino and Imvepi v.xlsx"
-df_include_cash_Scholastic_Primary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Scholastic-Primary", skip = 3) |> 
-  mutate(sheet_name = "Cash for Scholastic-Primary")
-df_include_cash_Education_Primary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Education - Primary", skip = 3) |> 
-  mutate(sheet_name = "Cash for Education - Primary")
-df_include_cash_Scholastics_Secondary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Scholastics Secondary", skip = 3) |> 
-  mutate(sheet_name = "Cash for Scholastics Secondary")
-df_include_cash_Education_Secondary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Education Secondary", skip = 3) |> 
-  mutate(sheet_name = "Cash for Education Secondary")
+# df_include_cash_Scholastic_Primary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Scholastic-Primary", skip = 3) |> 
+#   mutate(sheet_name = "Cash for Scholastic-Primary")
+# df_include_cash_Education_Primary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Education - Primary", skip = 3) |> 
+#   mutate(sheet_name = "Cash for Education - Primary")
+# df_include_cash_Scholastics_Secondary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Scholastics Secondary", skip = 3) |> 
+#   mutate(sheet_name = "Cash for Scholastics Secondary")
+# df_include_cash_Education_Secondary <- readxl::read_excel(path = db_loc_include_cash, sheet = "Cash for Education Secondary", skip = 3) |> 
+#   mutate(sheet_name = "Cash for Education Secondary")
+# 
+# df_include <- bind_rows(df_include_cash_Scholastic_Primary,
+#                         df_include_cash_Education_Primary,
+#                         df_include_cash_Scholastics_Secondary,
+#                         df_include_cash_Education_Secondary) |> 
+#   clean_names() |> 
+#   mutate(i.dataset_desc = "INCLUDE_Cash Beneficiary List Term III 2022",
+#          i.sheet_name = sheet_name,
+#          i.beneficiary_name = name_of_household_head,
+#          i.household_no = household_number,
+#          i.individual_no = individual_number,
+#          i.settlement = settlement
+#   ) |>
+#   support_replacement()
 
-df_include <- bind_rows(df_include_cash_Scholastic_Primary,
-                        df_include_cash_Education_Primary,
-                        df_include_cash_Scholastics_Secondary,
-                        df_include_cash_Education_Secondary) |> 
+
+df_include <- purrr::map2_df(.x = rio::import_list(db_loc_include_cash, skip = 3),
+                            .y = readxl::excel_sheets(db_loc_include_cash),
+                            ~{  .x  |>  
+                                dplyr::mutate(sheet_name = .y )
+                            }) |> 
+  clean_names() |> 
+  as_tibble() |> 
   clean_names() |> 
   mutate(i.dataset_desc = "INCLUDE_Cash Beneficiary List Term III 2022",
          i.sheet_name = sheet_name,
