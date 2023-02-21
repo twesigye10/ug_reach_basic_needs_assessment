@@ -204,14 +204,14 @@ colnames(df_include_cash)
 
 # db_loc_include_nrc
 db_loc_include_nrc <- "support_files/databases/INCLUDE_NRC consolidated Cash beneficiary_Omugo-Rhino Camp  Nakivale.xlsx"
-# df_include_nrc <- readxl::read_excel(path = db_loc_include_nrc)
 
-df_include_nrc_West_Nile <- readxl::read_excel(path = db_loc_include_nrc, sheet = "West Nile (EiE & Scholastic ben") |> 
-  mutate(sheet_name = "West Nile (EiE & Scholastic ben")
-df_include_nrc_South_West <- readxl::read_excel(path = db_loc_include_nrc, sheet = "South West (EiE & Scholatics be") |> 
-  mutate(sheet_name = "South West (EiE & Scholatics be")
-
-df_include_nrc <- bind_rows(df_include_nrc_West_Nile, df_include_nrc_South_West) |> 
+df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
+                             .y = readxl::excel_sheets(db_loc_include_nrc),
+                             ~{  .x  |>  
+                                 dplyr::mutate(sheet_name = .y )
+                             }) |> 
+  clean_names() |> 
+  as_tibble() |> 
   clean_names() |> 
   mutate(i.dataset_desc = "INCLUDE_NRC consolidated Cash beneficiary",
          i.sheet_name = sheet_name,
@@ -228,12 +228,53 @@ df_include_nrc <- bind_rows(df_include_nrc_West_Nile, df_include_nrc_South_West)
 colnames(df_include_nrc)
 
 db_loc_include_scholastics <- "support_files/databases/INCLUDE_Scholastics+EiE Paid (Equity)_ Kyangwali list 1_ Term II.xlsx"
-df_include_scholastics <- readxl::read_excel(path = db_loc_include_scholastics, skip = 4)
+# df_include_scholastics <- readxl::read_excel(path = db_loc_include_scholastics, skip = 4)
+
+df_include_scholastics <- purrr::map2_df(.x = rio::import_list(db_loc_include_scholastics, skip = 4),
+                                 .y = readxl::excel_sheets(db_loc_include_scholastics),
+                                 ~{  .x  |>  
+                                     dplyr::mutate(sheet_name = .y )
+                                 }) |> 
+  clean_names() |> 
+  as_tibble() |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "INCLUDE_Scholastics+EiE Paid (Equity)_ Kyangwali list 1",
+         i.sheet_name = sheet_name,
+         i.beneficiary_name = full_name_focal_point_individual,
+         i.gender = sex_focal_point,
+         i.household_no = registration_group_id,
+         i.settlement = "Kyangwali",
+         i.zone = zone,
+         i.purpose_of_cash = purpose_of_cash
+  ) |>
+  support_replacement()
+
+
 colnames(df_include_scholastics)
 
 db_loc_include_scholastics2 <- "support_files/databases/INCLUDE_Scholistics + EiE Paid Beyonic_ Kyangwali List 2_ Term II.xlsx"
-df_include_scholastics2 <- readxl::read_excel(path = db_loc_include_scholastics2, skip = 4)
-colnames(df_include_scholastics)
+
+df_include_scholastics2 <- purrr::map2_df(.x = rio::import_list(db_loc_include_scholastics2, skip = 4),
+                                         .y = readxl::excel_sheets(db_loc_include_scholastics2),
+                                         ~{  .x  |>  
+                                             dplyr::mutate(sheet_name = .y )
+                                         }) |> 
+  clean_names() |> 
+  as_tibble() |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "INCLUDE_Scholastics+EiE Paid Beyonic_ Kyangwali list 2",
+         i.sheet_name = sheet_name,
+         i.beneficiary_name = full_name_focal_point_individual,
+         i.gender = sex_focal_point,
+         i.household_no = registration_group_id,
+         i.settlement = "Kyangwali",
+         i.zone = zone,
+         i.purpose_of_cash = purpose_of_cash
+  ) |>
+  support_replacement()
+
+
+colnames(df_include_scholastics2)
 
 # Legal Assistance --------------------------------------------------------
 db_loc_la <- "support_files/databases/Legal Assistance Data base  Rhino Camp 2021-2022.xlsx"
