@@ -263,7 +263,7 @@ df_la <- purrr::map2_df(.x = rio::import_list(db_loc_la, which = xl_sheets_list)
   mutate(i.dataset_desc = "Legal Assistance Data base  Rhino Camp",
          i.sheet_name = sheet_name,
          i.beneficiary_name = ifelse(is.na(beneficary_name) & !is.na(cleints_name), cleints_name, beneficary_name) ,
-         i.age_band = age,
+         i.age = age,
          i.gender = gender,
          i.individual_no = individual_number,
          i.settlement = area_settlement,
@@ -298,7 +298,7 @@ df_nrc_isingiro <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_isingiro, whi
   mutate(i.dataset_desc = "NRC_Isingiro Beneficiaries",
          i.sheet_name = sheet_name,
          i.beneficiary_name = beneficary_name ,
-         i.age_band = age,
+         i.age = age,
          i.gender = gender,
          # i.individual_no = individual_number,
          i.status = status_refugee_host_community,
@@ -332,7 +332,7 @@ df_nrc_la <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_la, which = xl_shee
   mutate(i.dataset_desc = "NRC_Legal Assistance Data base  Rhino Camp",
          i.sheet_name = sheet_name,
          i.beneficiary_name = ifelse(is.na(beneficary_name) & !is.na(cleints_name), cleints_name, beneficary_name) ,
-         i.age_band = age,
+         i.age = age,
          i.gender = gender,
          # i.individual_no = individual_number,
          i.status = status_refugee_host_community,
@@ -347,8 +347,25 @@ df_nrc_la <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_la, which = xl_shee
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_nrc_la")
 
 # UCC ---------------------------------------------------------------------
+# df_ucc_mpct_22_23
 db_loc_ucc_mpct_22_23 <- "support_files/databases/UCC MPCT Beneficiaries July 2022-2023.xlsx"
-df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23)
+df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23) |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "UCC MPCT Beneficiaries July",
+         i.sheet_name = "Phase II",
+         i.beneficiary_name = name_of_household_focal_point ,
+         i.age = age_of_household_focal_point,
+         i.gender = sex_of_household_focal_point,
+         i.household_no = registration_group_id,
+         i.individual_no = idividual_id_of_household_focal_point,
+         # i.status = status_refugee_host_community,
+         # i.nationality = counrty_of_origin,
+         i.settlement = settlement,
+         i.zone = zone,
+         i.mobile_phone = mobile_phone_number
+         
+  ) |>
+  support_replacement()
 
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23")
