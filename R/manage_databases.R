@@ -295,7 +295,7 @@ df_nrc_isingiro <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_isingiro, whi
                                   }) |> 
   clean_names() |> 
   as_tibble() |> 
-  mutate(i.dataset_desc = "Legal Assistance Data base  Rhino Camp",
+  mutate(i.dataset_desc = "NRC_Isingiro Beneficiaries",
          i.sheet_name = sheet_name,
          i.beneficiary_name = beneficary_name ,
          i.age_band = age,
@@ -312,9 +312,37 @@ df_nrc_isingiro <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_isingiro, whi
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_nrc_isingiro")
 
+# db_loc_nrc_la
 db_loc_nrc_la <- "support_files/databases/NRC_Legal Assistance Data base  Rhino Camp 2021-2022 copy.xlsx"
-df_nrc_la <- readxl::read_excel(path = db_loc_nrc_la, skip = 1)
 
+xl_sheets_list_nrc_rhino <- c(#"March 2021", "Jan 21", "Feb 2021", "April 2021", "May 2021", 
+                              "June 2021", "July 2021", "Aug 2021", "Sept 2021", "Oct 2021", "Nov 2021", 
+                              "April 2022", "May 2022", "June 2022", "July 2022", "August 2022", "September 2022")
+# df_nrc_la <- readxl::read_excel(path = db_loc_nrc_la, skip = 1)
+
+df_nrc_la <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_la, which = xl_sheets_list_nrc_rhino),
+                                  .y = xl_sheets_list_nrc_rhino,
+                                  ~{  .x  |>  
+                                      dplyr::mutate(sheet_name = .y,
+                                                    Age = as.character(Age)) |> 
+                                      select(-21)
+                                  }) |> 
+  clean_names() |> 
+  as_tibble() |> 
+  mutate(i.dataset_desc = "NRC_Legal Assistance Data base  Rhino Camp",
+         i.sheet_name = sheet_name,
+         i.beneficiary_name = ifelse(is.na(beneficary_name) & !is.na(cleints_name), cleints_name, beneficary_name) ,
+         i.age_band = age,
+         i.gender = gender,
+         # i.individual_no = individual_number,
+         i.status = status_refugee_host_community,
+         i.nationality = counrty_of_origin,
+         i.settlement = area_settlement,
+         i.zone = zone_village,
+         i.mobile_phone = telephone
+         
+  ) |>
+  support_replacement()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_nrc_la")
 
