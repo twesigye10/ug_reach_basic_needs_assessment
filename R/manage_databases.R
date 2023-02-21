@@ -1,6 +1,7 @@
 library(tidyverse)
 library(janitor)
 library(purrr)
+library(checksupporteR)
 
 # replacement function
 
@@ -276,50 +277,80 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 
 # NRC ---------------------------------------------------------------------
 db_loc_nrc_isingiro <- "support_files/databases/NRC_Isingiro Beneficiaries' EXCEL database 2022.xlsx"
-df_nrc_isingiro <- readxl::read_excel(path = db_loc_nrc_isingiro)
-colnames(df_nrc_isingiro)
+xl_sheets_list_nrc_isingiro <- c("January 2021", "February 2021", "March 2021", "April 2021", "May 2021", "June 2021", "July 2021",     
+                                 "December 2021", "August 2021", "September 2021", "October 2021", "November 2021", "January 2022",   "Feb 2022",      
+                                 "March 2022", "April 2022", "May 2022",   "June 2022",  "July 2022",  "August 2022", "September 2022",
+                                 # "October 2022", "November 2022", "December 2022", "JAN 2020",   "FEB 2020",   "APRIL 2020", " MARCH 2020", "MAY 2020",   "JUNE", 
+                                 "October 2022", "November 2022", "December 2022", "JAN 2020",   "FEB 2020",  "MAY 2020",   "JUNE", 
+                                 "JULY", "AUGUST", "SEPT", "OCT", "NOV", "DEC")
+data_nms_is <- names(readxl::read_excel(path = db_loc_nrc_isingiro, n_max = 100))
+c_types_is <- case_when(str_detect(string = data_nms_is, pattern = "DATE OF RECORDING") ~ "date", 
+                        str_detect(string = data_nms_is, pattern = "Telephone|AGE") ~ "text",
+                        TRUE ~ "guess")
+# df_nrc_isingiro <- readxl::read_excel(path = db_loc_nrc_isingiro)
+df_nrc_isingiro <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_isingiro, which = xl_sheets_list_nrc_isingiro, col_types = c_types_is),
+                                  .y = xl_sheets_list_nrc_isingiro,
+                                  ~{  .x  |>  
+                                      dplyr::mutate(sheet_name = .y) 
+                                  }) |> 
+  clean_names() |> 
+  as_tibble() |> 
+  mutate(i.dataset_desc = "Legal Assistance Data base  Rhino Camp",
+         i.sheet_name = sheet_name,
+         i.beneficiary_name = beneficary_name ,
+         i.age_band = age,
+         i.gender = gender,
+         # i.individual_no = individual_number,
+         i.status = status_refugee_host_community,
+         i.nationality = counrty_of_origin,
+         i.settlement = area_settlement,
+         i.zone = zone_village,
+         i.mobile_phone = telephone
+         
+  ) |>
+  support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_nrc_isingiro")
 
 db_loc_nrc_la <- "support_files/databases/NRC_Legal Assistance Data base  Rhino Camp 2021-2022 copy.xlsx"
 df_nrc_la <- readxl::read_excel(path = db_loc_nrc_la, skip = 1)
-colnames(df_nrc_la)
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_nrc_la")
 
 # UCC ---------------------------------------------------------------------
 db_loc_ucc_mpct_22_23 <- "support_files/databases/UCC MPCT Beneficiaries July 2022-2023.xlsx"
 df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23)
-colnames(df_ucc_mpct_22_23)
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23")
 
 db_loc_ucc_mpct_21_22_kyangwali <- "support_files/databases/UCC MPCT Beneficiary List Aug 2021- June 2022 Kyangwali.xlsx"
 df_ucc_mpct_21_22_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_21_22_kyangwali, skip = 8)
-colnames(df_ucc_mpct_21_22_kyangwali)
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_21_22_kyangwali")
 
 db_loc_ucc_mpct_22_23_palabek <- "support_files/databases/UCC MPCT Beneficiary List Aug 2022-2023 Palabek.xlsx"
 df_ucc_mpct_22_23_palabek <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_palabek, skip = 8)
-colnames(df_ucc_mpct_22_23_palabek)
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_palabek")
 
 db_loc_ucc_mpct_21_22 <- "support_files/databases/UCC MPCT Beneficiary list JUN 2021-AUG 2022.xlsx"
 df_ucc_mpct_21_22 <- readxl::read_excel(path = db_loc_ucc_mpct_21_22)
-colnames(df_ucc_mpct_21_22)
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_21_22")
 
 db_loc_ucc_mpct_22_23_kyaka <- "support_files/databases/UCC MPCT Beneficiary List Kyaka Aug 2022- 2023.xlsx"
 df_ucc_mpct_22_23_kyaka <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyaka, skip = 9)
-colnames(df_ucc_mpct_22_23_kyaka)
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_kyaka")
 
 db_loc_ucc_mpct_22_23_kyangwali <- "support_files/databases/UCC MPCT Beneficiary List Kyangwali Aug 2022-2023.xlsx"
 df_ucc_mpct_22_23_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyangwali, skip = 1)
-colnames(df_ucc_mpct_22_23_kyangwali)
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_kyangwali")
