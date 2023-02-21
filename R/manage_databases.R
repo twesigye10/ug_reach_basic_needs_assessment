@@ -119,23 +119,40 @@ colnames(df_dpr_mpc_imvepi)
 # EQUATE ------------------------------------------------------------------
 
 db_loc_equate <- "support_files/databases/EQUATE Beneficary List-23.01.2023.xlsx"
-df_equate_Palabek <- readxl::read_excel(path = db_loc_equate, sheet = "Palabek", skip = 1) |> 
-  mutate(settlement = "Palabek", sheet_name = "Palabek")
-df_equate_Rhino <- readxl::read_excel(path = db_loc_equate, sheet = "Rhino", skip = 1) |> 
-  mutate(settlement = "Rhino camp", sheet_name = "Rhino camp")
-df_equate_Imvepi <- readxl::read_excel(path = db_loc_equate, sheet = "Imvepi", skip = 1) |> 
-  mutate(settlement = "Imvepi", sheet_name = "Imvepi")
+# df_equate_Palabek <- readxl::read_excel(path = db_loc_equate, sheet = "Palabek", skip = 1) |> 
+#   mutate(settlement = "Palabek", sheet_name = "Palabek")
+# df_equate_Rhino <- readxl::read_excel(path = db_loc_equate, sheet = "Rhino", skip = 1) |> 
+#   mutate(settlement = "Rhino camp", sheet_name = "Rhino camp")
+# df_equate_Imvepi <- readxl::read_excel(path = db_loc_equate, sheet = "Imvepi", skip = 1) |> 
+#   mutate(settlement = "Imvepi", sheet_name = "Imvepi")
+# 
+# df_equate = bind_rows(df_equate_Palabek, df_equate_Rhino, df_equate_Imvepi) |> 
+#   clean_names() |> 
+# mutate(i.dataset_desc = "EQUATE Beneficary List",
+#        i.sheet_name = sheet_name,
+#        i.beneficiary_name = name,
+#        i.gender = gender,
+#        i.settlement = settlement,
+#        i.mobile_phone = contact
+# ) |>
+# support_replacement()
 
-df_equate = bind_rows(df_equate_Palabek, df_equate_Rhino, df_equate_Imvepi) |> 
+df_equate <- purrr::map2_df(.x = rio::import_list(db_loc_equate, skip =1),
+                            .y = readxl::excel_sheets(db_loc_equate),
+                            ~{  .x  |>  
+                                dplyr::mutate(sheet_name = .y )
+                            }) |> 
   clean_names() |> 
-mutate(i.dataset_desc = "EQUATE Beneficary List",
-       i.sheet_name = sheet_name,
-       i.beneficiary_name = name,
-       i.gender = gender,
-       i.settlement = settlement,
-       i.mobile_phone = contact
-) |>
-support_replacement()
+  as_tibble() |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "EQUATE Beneficary List",
+         i.sheet_name = sheet_name,
+         i.beneficiary_name = name,
+         i.gender = gender,
+         i.settlement = sheet_name,
+         i.mobile_phone = contact
+  ) |>
+  support_replacement()
   
 colnames(df_equate)
 
