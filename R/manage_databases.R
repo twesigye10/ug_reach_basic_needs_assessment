@@ -33,30 +33,30 @@ colnames(df_apeal)
 
 
 # DPR ---------------------------------------------------------------------
-db_loc_dpr1 <- "support_files/databases/DPR_List of beneficiaries for NFI assistance_Lamwo_ECHO DPR.xlsx"
-# df_dpr1 <- readxl::read_excel(path = db_loc_dpr1)
-# df_list <- map_df(set_names(excel_sheets(db_loc_dpr1)),
-#                ~read_excel(col_types = ), path = db_loc_dpr1)
-
-df_dpr1 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr1),
-               .y = readxl::excel_sheets(db_loc_dpr1),
-               ~{  .x  |>  
-                   dplyr::mutate(Block = as.character(Block),
-                                 sheet_name = .y )
-               }) |> 
-  clean_names() |> 
-  as_tibble() |> 
-  mutate(i.dataset_desc = "DPR_NFI_Lamwo_ECHO",
-         i.sheet_name = sheet_name,
-         i.beneficiary_name = name_in_full,
-         i.age = age,
-         i.gender = gender,
-         i.household_no = ration_card_number,
-         i.settlement = "Lamwo",
-         i.vulnerability_status = vulnerability_category,) |> 
-  support_replacement()
-
-colnames(df_dpr1)
+# db_loc_dpr1 <- "support_files/databases/DPR_List of beneficiaries for NFI assistance_Lamwo_ECHO DPR.xlsx"
+# # df_dpr1 <- readxl::read_excel(path = db_loc_dpr1)
+# # df_list <- map_df(set_names(excel_sheets(db_loc_dpr1)),
+# #                ~read_excel(col_types = ), path = db_loc_dpr1)
+# 
+# df_dpr1 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr1),
+#                .y = readxl::excel_sheets(db_loc_dpr1),
+#                ~{  .x  |>  
+#                    dplyr::mutate(Block = as.character(Block),
+#                                  sheet_name = .y )
+#                }) |> 
+#   clean_names() |> 
+#   as_tibble() |> 
+#   mutate(i.dataset_desc = "DPR_NFI_Lamwo_ECHO",
+#          i.sheet_name = sheet_name,
+#          i.beneficiary_name = name_in_full,
+#          i.age = age,
+#          i.gender = gender,
+#          i.household_no = ration_card_number,
+#          i.settlement = "Lamwo",
+#          i.vulnerability_status = vulnerability_category,) |> 
+#   support_replacement()
+# 
+# colnames(df_dpr1)
 
 db_loc_dpr2 <- "support_files/databases/DPR_List of beneficiaries for NFIs Assistance_Lamwo_ECHO DPR_2.xlsx"
 # df_dpr2 <- readxl::read_excel(path = db_loc_dpr2)
