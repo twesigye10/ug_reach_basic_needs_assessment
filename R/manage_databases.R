@@ -84,7 +84,7 @@ df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
   support_replacement() |> 
   filter(sheet_name == "General")
   
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr2")
 
 db_loc_dpr_mpc_rhino <- "support_files/databases/DPR_MPCT Beneficiary List for Rhino Camp Settlement.xlsx"
 df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |> 
@@ -101,7 +101,7 @@ df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |>
          ) |> 
   support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr_mpc_rhino")
 
 db_loc_dpr_mpc_imvepi <- "support_files/databases/DPR_MPCT Beneficiary List_Imvepi refugee settlement.xlsx"
 df_dpr_mpc_imvepi <- readxl::read_excel(path = db_loc_dpr_mpc_imvepi, skip = 3) |> 
@@ -117,7 +117,7 @@ df_dpr_mpc_imvepi <- readxl::read_excel(path = db_loc_dpr_mpc_imvepi, skip = 3) 
   ) |> 
   support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr_mpc_imvepi")
 
 # EQUATE ------------------------------------------------------------------
 
@@ -140,7 +140,7 @@ df_equate <- purrr::map2_df(.x = rio::import_list(db_loc_equate, skip =1),
   ) |>
   support_replacement()
   
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_equate")
 
 # INCLUDE -----------------------------------------------------------------
 # df_include
@@ -163,7 +163,7 @@ df_include <- purrr::map2_df(.x = rio::import_list(db_loc_include_cash, skip = 3
   ) |>
   support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include")
 
 # db_loc_include_nrc
 db_loc_include_nrc <- "support_files/databases/INCLUDE_NRC consolidated Cash beneficiary_Omugo-Rhino Camp  Nakivale.xlsx"
@@ -188,7 +188,7 @@ df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
   ) |>
   support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include_nrc")
 
 # db_loc_include_scholastics
 db_loc_include_scholastics <- "support_files/databases/INCLUDE_Scholastics+EiE Paid (Equity)_ Kyangwali list 1_ Term II.xlsx"
@@ -213,7 +213,7 @@ df_include_scholastics <- purrr::map2_df(.x = rio::import_list(db_loc_include_sc
   ) |>
   support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include_scholastics")
 
 # db_loc_include_scholastics2
 db_loc_include_scholastics2 <- "support_files/databases/INCLUDE_Scholistics + EiE Paid Beyonic_ Kyangwali List 2_ Term II.xlsx"
@@ -237,7 +237,7 @@ df_include_scholastics2 <- purrr::map2_df(.x = rio::import_list(db_loc_include_s
   ) |>
   support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include_scholastics2")
 
 # Legal Assistance --------------------------------------------------------
 db_loc_la <- "support_files/databases/Legal Assistance Data base  Rhino Camp 2021-2022.xlsx"
@@ -272,7 +272,7 @@ df_la <- purrr::map2_df(.x = rio::import_list(db_loc_la, which = xl_sheets_list)
   ) |>
   support_replacement()
 
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "")
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_la")
 
 # NRC ---------------------------------------------------------------------
 db_loc_nrc_isingiro <- "support_files/databases/NRC_Isingiro Beneficiaries' EXCEL database 2022.xlsx"
