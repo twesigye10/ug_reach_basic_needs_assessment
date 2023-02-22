@@ -489,4 +489,4 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 
 df_merged_data <- bind_rows(merged_data_list)
 
-rio::export(x = df_merged_data, file = paste0("support_files/databases/", butteR::date_file_prefix(), "merged_databases_bna.xlsx"))
+rio::export(x = df_merged_data, file = paste0("support_files/databases/", butteR::date_file_prefix(), "_merged_databases_bna.xlsx"))
