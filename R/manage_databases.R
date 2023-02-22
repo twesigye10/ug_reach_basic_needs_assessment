@@ -5,7 +5,7 @@ library(checksupporteR)
 
 # replacement function
 
-support_replacement <- function(input_df, input_selection_str = "i.", input_replacement_str = "") {
+support_rename_str_replace <- function(input_df, input_selection_str = "i.", input_replacement_str = "") {
   input_df |> 
     dplyr::select(starts_with(input_selection_str)) |> 
     dplyr::rename_with(.fn = ~str_replace(string = .x, pattern = input_selection_str, replacement =  input_replacement_str))
@@ -33,7 +33,7 @@ df_apeal <- readxl::read_excel(path = db_loc_apeal, sheet = "APEAL PROJECT", ski
          i.case_number = case_number,
          i.implementing_agency = implementing_agency
          ) |> 
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_apeal")
 
@@ -60,7 +60,7 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 #          i.group_hh_number = ration_card_number,
 #          i.settlement = "Lamwo",
 #          i.vulnerability_status = vulnerability_category,) |> 
-#   support_replacement()
+#   support_rename_str_replace()
 # 
 # colnames(df_dpr1)
 
@@ -84,7 +84,7 @@ df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
          i.group_hh_number = ration_card_number,
          i.settlement = "Lamwo",
          i.vulnerability_status = vulnerability_category,) |> 
-  support_replacement() |> 
+  support_rename_str_replace() |> 
   filter(sheet_name == "General")
   
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr2")
@@ -103,7 +103,7 @@ df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |>
          i.settlement = "Rhino camp",
          i.mobile_phone = record_mobile_phone_number_registered_for_mobile_money_if_not_record_no_phone
          ) |> 
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr_mpc_rhino")
 
@@ -120,7 +120,7 @@ df_dpr_mpc_imvepi <- readxl::read_excel(path = db_loc_dpr_mpc_imvepi, skip = 3) 
          i.settlement = "Imvepi",
          i.mobile_phone = mo_mo_number
   ) |> 
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr_mpc_imvepi")
 
@@ -143,7 +143,7 @@ df_equate <- purrr::map2_df(.x = rio::import_list(db_loc_equate, skip =1),
          i.settlement = sheet_name,
          i.mobile_phone = contact
   ) |>
-  support_replacement()
+  support_rename_str_replace()
   
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_equate")
 
@@ -166,7 +166,7 @@ df_include <- purrr::map2_df(.x = rio::import_list(db_loc_include_cash, skip = 3
          i.individual_no = individual_number,
          i.settlement = settlement
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include")
 
@@ -191,7 +191,7 @@ df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
          i.mobile_phone = household_phone_number_mtn,
          i.vulnerability_status = vulnerability
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include_nrc")
 
@@ -216,7 +216,7 @@ df_include_scholastics <- purrr::map2_df(.x = rio::import_list(db_loc_include_sc
          i.zone = zone,
          i.purpose_of_cash = purpose_of_cash
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include_scholastics")
 
@@ -240,7 +240,7 @@ df_include_scholastics2 <- purrr::map2_df(.x = rio::import_list(db_loc_include_s
          i.zone = zone,
          i.purpose_of_cash = purpose_of_cash
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_include_scholastics2")
 
@@ -275,7 +275,7 @@ df_la <- purrr::map2_df(.x = rio::import_list(db_loc_la, which = xl_sheets_list)
          i.mobile_phone = telephone,
          i.nationality = counrty_of_origin
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_la")
 
@@ -312,7 +312,7 @@ df_nrc_isingiro <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_isingiro, whi
          i.mobile_phone = telephone
          
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_nrc_isingiro")
 
@@ -346,7 +346,7 @@ df_nrc_la <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_la, which = xl_shee
          i.mobile_phone = telephone
          
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_nrc_la")
 
@@ -373,7 +373,7 @@ df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23, col_types 
          i.mobile_phone = mobile_phone_number
          
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23")
 
@@ -390,7 +390,7 @@ df_ucc_mpct_21_22_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_21_22_k
          i.settlement = "Kyangwali"
 
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_21_22_kyangwali")
 
@@ -407,7 +407,7 @@ df_ucc_mpct_22_23_palabek <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_pal
          i.settlement = "Palabek",
          i.zone = zone
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_palabek")
 
@@ -426,7 +426,7 @@ df_ucc_mpct_21_22 <- readxl::read_excel(path = db_loc_ucc_mpct_21_22) |>
          i.zone = zone
          
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_21_22")
 
@@ -444,7 +444,7 @@ df_ucc_mpct_22_23_kyaka <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyaka
          i.individual_no = individual_id,
          i.settlement = "Kyaka"
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_kyaka")
 
@@ -460,7 +460,7 @@ df_ucc_mpct_22_23_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_k
          i.individual_no = indiv_number,
          i.settlement = "Kyangwali"
   ) |>
-  support_replacement()
+  support_rename_str_replace()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_kyangwali")
 
