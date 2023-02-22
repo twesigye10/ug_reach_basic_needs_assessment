@@ -506,7 +506,33 @@ df_update_group_hh_no <- df_merged_data |>
 
 df_updated_data <- df_merged_data |> 
   left_join(df_update_group_hh_no, by = "int.row_id") |> 
-  mutate(int.group_hh_no = ifelse(is.na(int.group_hh_no), group_hh_no, int.group_hh_no)) |> 
-  select(-int.row_id)
+  mutate(int.group_hh_no = ifelse(is.na(int.group_hh_no), group_hh_no, int.group_hh_no))
 
-rio::export(x = df_updated_data, file = paste0("support_files/databases/", butteR::date_file_prefix(), "_merged_databases_bna.xlsx"))
+df_updated_data_with_group_no <- df_updated_data |> 
+  filter(str_detect(string = int.group_hh_no, pattern = "[\\w|-]{4,20}")) |> 
+  mutate(int.group_hh_no = case_when(int.row_id == 33712 ~ "RM8 19 14293", 
+                                     str_detect(string = int.group_hh_no, pattern = "^\\.") ~ str_replace(string = int.group_hh_no, pattern = "^\\.", replacement = ""),
+                                     str_detect(string = int.group_hh_no, pattern = "\\.$") ~ str_replace(string = int.group_hh_no, pattern = "\\.$", replacement = ""),
+                                     TRUE ~ int.group_hh_no))
+
+df_unique_group_no <- df_updated_data_with_group_no |> 
+  mutate(int.assist_test = "Yes") |> 
+  pivot_wider(names_from = assistance_received, values_from = int.assist_test) |> 
+  group_by(int.group_hh_no) |> 
+  mutate(APEAL = ifelse(str_detect(string = paste(APEAL, collapse = " : "), pattern = "Yes"), 1, NA),
+         DPR = ifelse(str_detect(string = paste(DPR, collapse = " : "), pattern = "Yes"), 1, NA),
+         DPR_MPCT = ifelse(str_detect(string = paste(DPR_MPCT, collapse = " : "), pattern = "Yes"), 1, NA),
+         INCLUDE = ifelse(str_detect(string = paste(INCLUDE, collapse = " : "), pattern = "Yes"), 1, NA),
+         INCLUDE_NRC = ifelse(str_detect(string = paste(INCLUDE_NRC, collapse = " : "), pattern = "Yes"), 1, NA),
+         UCC_MPCT = ifelse(str_detect(string = paste(UCC_MPCT, collapse = " : "), pattern = "Yes"), 1, NA)
+         ) |> 
+  filter(row_number() == 1) |> 
+  ungroup() |> 
+  rowwise() |>
+  mutate(assistance_count = sum(c_across(APEAL:UCC_MPCT), na.rm = TRUE)) |>
+  ungroup()
+
+rio::export(x = list(all_data = df_updated_data, 
+                     data_with_group_no = df_updated_data_with_group_no,
+                     data_unique_groups = df_unique_group_no), 
+            file = paste0("support_files/databases/", butteR::date_file_prefix(), "_merged_databases_bna.xlsx"))
