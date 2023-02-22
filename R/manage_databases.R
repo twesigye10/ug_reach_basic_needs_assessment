@@ -487,6 +487,21 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 
 # merge the processed datasets --------------------------------------------
 
-df_merged_data <- bind_rows(merged_data_list)
+df_merged_data <- bind_rows(merged_data_list) |> 
+  mutate(int.row_id = row_number())
+
+# update group_hh_no based on other occurance of individual_no
+df_update_group_hh_no <- df_merged_data |> 
+  filter(str_detect(string = individual_no, pattern = "[\\w|-]{4,20}")) |> 
+  group_by(individual_no) |> 
+  filter(n()>1) |> 
+  mutate(int.check_group = paste(group_hh_no, collapse = " : "),
+         int.group_hh_no = ifelse(!str_detect(string = group_hh_no, pattern = "[\\w|-]{4,20}") & str_detect(string = int.check_group, pattern = "[\\w|-]{4,20}"),
+                                  str_extract(string = int.check_group, pattern = "[\\w|-]{4,20}"), group_hh_no)
+  ) |> 
+  filter(group_hh_no != int.group_hh_no) |> 
+  select(int.row_id, int.group_hh_no)
+
+
 
 rio::export(x = df_merged_data, file = paste0("support_files/databases/", butteR::date_file_prefix(), "_merged_databases_bna.xlsx"))
