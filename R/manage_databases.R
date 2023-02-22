@@ -259,7 +259,7 @@ df_la <- purrr::map2_df(.x = rio::import_list(db_loc_la, which = xl_sheets_list)
                                           .y = xl_sheets_list,
                                           ~{  .x  |>  
                                               dplyr::mutate(sheet_name = .y,
-                                                            Age = as.character(Age)) |> 
+                                                            Age = as.numeric(Age)) |> 
                                               clean_names() |> 
                                               select(-c(21))
                                           }) |> 
@@ -267,7 +267,7 @@ df_la <- purrr::map2_df(.x = rio::import_list(db_loc_la, which = xl_sheets_list)
   mutate(i.dataset_desc = "Legal Assistance Data base  Rhino Camp",
          i.sheet_name = sheet_name,
          i.beneficiary_name = ifelse(is.na(beneficary_name) & !is.na(cleints_name), cleints_name, beneficary_name) ,
-         i.age = age,
+         i.age = as.numeric(age),
          i.gender = gender,
          i.individual_no = individual_number,
          i.settlement = area_settlement,
@@ -302,7 +302,7 @@ df_nrc_isingiro <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_isingiro, whi
   mutate(i.dataset_desc = "NRC_Isingiro Beneficiaries",
          i.sheet_name = sheet_name,
          i.beneficiary_name = beneficary_name ,
-         i.age = age,
+         i.age = as.numeric(age),
          i.gender = gender,
          # i.individual_no = individual_number,
          i.status = status_refugee_host_community,
@@ -328,7 +328,7 @@ df_nrc_la <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_la, which = xl_shee
                                   .y = xl_sheets_list_nrc_rhino,
                                   ~{  .x  |>  
                                       dplyr::mutate(sheet_name = .y,
-                                                    Age = as.character(Age)) |> 
+                                                    Age = as.numeric(Age)) |> 
                                       select(-21)
                                   }) |> 
   clean_names() |> 
@@ -336,7 +336,7 @@ df_nrc_la <- purrr::map2_df(.x = rio::import_list(db_loc_nrc_la, which = xl_shee
   mutate(i.dataset_desc = "NRC_Legal Assistance Data base  Rhino Camp",
          i.sheet_name = sheet_name,
          i.beneficiary_name = ifelse(is.na(beneficary_name) & !is.na(cleints_name), cleints_name, beneficary_name) ,
-         i.age = age,
+         i.age = as.numeric(age),
          i.gender = gender,
          # i.individual_no = individual_number,
          i.status = status_refugee_host_community,
@@ -353,7 +353,11 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 # UCC ---------------------------------------------------------------------
 # df_ucc_mpct_22_23
 db_loc_ucc_mpct_22_23 <- "support_files/databases/UCC MPCT Beneficiaries July 2022-2023.xlsx"
-df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23) |> 
+
+data_nms_ucc_mpct <- names(readxl::read_excel(path = db_loc_ucc_mpct_22_23, n_max = 100))
+c_types_ucc_mpct <- ifelse(str_detect(string = data_nms_ucc_mpct, pattern = "Mobile Phone"), "text",  "guess")
+
+df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23, col_types = c_types_ucc_mpct) |> 
   clean_names() |> 
   mutate(i.dataset_desc = "UCC MPCT Beneficiaries July",
          i.sheet_name = "Phase II",
