@@ -499,9 +499,14 @@ df_update_group_hh_no <- df_merged_data |>
          int.group_hh_no = ifelse(!str_detect(string = group_hh_no, pattern = "[\\w|-]{4,20}") & str_detect(string = int.check_group, pattern = "[\\w|-]{4,20}"),
                                   str_extract(string = int.check_group, pattern = "[\\w|-]{4,20}"), group_hh_no)
   ) |> 
+  ungroup() |> 
   filter(group_hh_no != int.group_hh_no) |> 
   select(int.row_id, int.group_hh_no)
 
 
+df_updated_data <- df_merged_data |> 
+  left_join(df_update_group_hh_no, by = "int.row_id") |> 
+  mutate(int.group_hh_no = ifelse(is.na(int.group_hh_no), group_hh_no, int.group_hh_no)) |> 
+  select(-int.row_id)
 
-rio::export(x = df_merged_data, file = paste0("support_files/databases/", butteR::date_file_prefix(), "_merged_databases_bna.xlsx"))
+rio::export(x = df_updated_data, file = paste0("support_files/databases/", butteR::date_file_prefix(), "_merged_databases_bna.xlsx"))
