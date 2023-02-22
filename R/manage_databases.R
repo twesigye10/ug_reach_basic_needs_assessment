@@ -23,7 +23,7 @@ df_apeal <- readxl::read_excel(path = db_loc_apeal, sheet = "APEAL PROJECT", ski
          i.beneficiary_name = beneficiary_name,
          i.age_band = age_band_0_59months_5_17_18_49_50,
          i.gender = sex_m_f,
-         i.group_hh_number = household_no,
+         i.group_hh_no = household_no,
          i.individual_no = individual_no_national_id_number,
          i.nationality = nationality,
          i.status = status_refugee_host,
@@ -59,7 +59,7 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 #          i.beneficiary_name = name_in_full,
 #          i.age = age,
 #          i.gender = gender,
-#          i.group_hh_number = ration_card_number,
+#          i.group_hh_no = ration_card_number,
 #          i.settlement = "Lamwo",
 #          i.vulnerability_status = vulnerability_category,) |> 
 #   support_rename_str_replace()
@@ -84,7 +84,7 @@ df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
          i.beneficiary_name = name_in_full,
          i.age = age,
          i.gender = gender,
-         i.group_hh_number = ration_card_number,
+         i.group_hh_no = ration_card_number,
          i.settlement = "Lamwo",
          i.vulnerability_status = vulnerability_category,) |> 
   support_rename_str_replace() |> 
@@ -102,7 +102,7 @@ df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |>
          i.age = psn_age,
          i.age_band = age_group_date_of_birth,
          i.gender = sex,
-         i.group_hh_number = registration_group,
+         i.group_hh_no = registration_group,
          i.individual_no = psn_individual_id,
          i.settlement = "Rhino camp",
          i.mobile_phone = record_mobile_phone_number_registered_for_mobile_money_if_not_record_no_phone
@@ -120,7 +120,7 @@ df_dpr_mpc_imvepi <- readxl::read_excel(path = db_loc_dpr_mpc_imvepi, skip = 3) 
          i.beneficiary_name = beneficiary_name,
          i.age = age_dob,
          i.gender = gender,
-         i.group_hh_number = group_no,
+         i.group_hh_no = group_no,
          i.individual_no = individual_no,
          i.settlement = "Imvepi",
          i.mobile_phone = mo_mo_number
@@ -169,7 +169,7 @@ df_include <- purrr::map2_df(.x = rio::import_list(db_loc_include_cash, skip = 3
          i.sheet_name = sheet_name,
          i.assistance_received = "INCLUDE",
          i.beneficiary_name = name_of_household_head,
-         i.group_hh_number = household_number,
+         i.group_hh_no = household_number,
          i.individual_no = individual_number,
          i.settlement = settlement
   ) |>
@@ -193,7 +193,7 @@ df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
          i.assistance_received = "INCLUDE_NRC",
          i.beneficiary_name = name_of_household_head,
          i.gender = gender,
-         i.group_hh_number = ifelse(is.na(group_household_number), group_id, group_household_number),
+         i.group_hh_no = ifelse(is.na(group_household_number), group_id, group_household_number),
          i.individual_no = ifelse(is.na(refugee_number_of_household_head_or_caregiver), individual_id, refugee_number_of_household_head_or_caregiver),
          i.settlement = ifelse(is.na(settlement), location, settlement),
          i.mobile_phone = household_phone_number_mtn,
@@ -220,7 +220,7 @@ df_include_scholastics <- purrr::map2_df(.x = rio::import_list(db_loc_include_sc
          i.assistance_received = "INCLUDE",
          i.beneficiary_name = full_name_focal_point_individual,
          i.gender = sex_focal_point,
-         i.group_hh_number = registration_group_id,
+         i.group_hh_no = registration_group_id,
          i.settlement = "Kyangwali",
          i.zone = zone,
          i.purpose_of_cash = purpose_of_cash
@@ -245,7 +245,7 @@ df_include_scholastics2 <- purrr::map2_df(.x = rio::import_list(db_loc_include_s
          i.assistance_received = "INCLUDE",
          i.beneficiary_name = full_name_focal_point_individual,
          i.gender = sex_focal_point,
-         i.group_hh_number = registration_group_id,
+         i.group_hh_no = registration_group_id,
          i.settlement = "Kyangwali",
          i.zone = zone,
          i.purpose_of_cash = purpose_of_cash
@@ -378,7 +378,7 @@ df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23, col_types 
          i.beneficiary_name = name_of_household_focal_point ,
          i.age = age_of_household_focal_point,
          i.gender = sex_of_household_focal_point,
-         i.group_hh_number = registration_group_id,
+         i.group_hh_no = registration_group_id,
          i.individual_no = idividual_id_of_household_focal_point,
          # i.status = status_refugee_host_community,
          # i.nationality = counrty_of_origin,
@@ -401,7 +401,7 @@ df_ucc_mpct_21_22_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_21_22_k
          i.beneficiary_name = hh_focal_point_name ,
          i.age = age,
          i.gender = sex,
-         i.group_hh_number = hh_group_number,
+         i.group_hh_no = hh_group_number,
          i.settlement = "Kyangwali"
 
   ) |>
@@ -419,7 +419,7 @@ df_ucc_mpct_22_23_palabek <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_pal
          i.beneficiary_name = benefciary_name ,
          i.age = age,
          i.gender = gender,
-         i.group_hh_number = group_no,
+         i.group_hh_no = group_no,
          i.settlement = "Palabek",
          i.zone = zone
   ) |>
@@ -437,7 +437,7 @@ df_ucc_mpct_21_22 <- readxl::read_excel(path = db_loc_ucc_mpct_21_22) |>
          i.beneficiary_name = name_of_household_focal_point ,
          i.age = age_of_household_focal_point,
          i.gender = sex_of_household_focal_point,
-         i.group_hh_number = registration_group_id,
+         i.group_hh_no = registration_group_id,
          i.individual_no = idividual_id_of_household_focal_point,
          i.settlement = settlement,
          i.zone = zone
@@ -458,7 +458,7 @@ df_ucc_mpct_22_23_kyaka <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyaka
          i.beneficiary_name = full_name_focal_point_individual ,
          i.age = age_focal_point,
          i.gender = sex_focal_point,
-         i.group_hh_number = registration_group_id,
+         i.group_hh_no = registration_group_id,
          i.individual_no = individual_id,
          i.settlement = "Kyaka"
   ) |>
@@ -475,7 +475,7 @@ df_ucc_mpct_22_23_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_k
          i.assistance_received = "UCC_MPCT",
          i.beneficiary_name = focal_point_name ,
          i.gender = gender,
-         i.group_hh_number = hh_number,
+         i.group_hh_no = hh_number,
          i.individual_no = indiv_number,
          i.settlement = "Kyangwali"
   ) |>
