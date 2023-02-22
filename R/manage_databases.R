@@ -17,10 +17,12 @@ merged_data_list <- list()
 db_loc_apeal <- "support_files/databases/APEAL IV Beneficiary Database.xlsx"
 df_apeal <- readxl::read_excel(path = db_loc_apeal, sheet = "APEAL PROJECT", skip = 1) |> 
   clean_names() |> 
-  mutate(i.beneficiary_name = beneficiary_name,
+  mutate(i.dataset_desc = "APEAL IV Beneficiary Database",
+         i.sheet_name = "APEAL PROJECT",
+         i.beneficiary_name = beneficiary_name,
          i.age_band = age_band_0_59months_5_17_18_49_50,
          i.gender = sex_m_f,
-         i.household_no = household_no,
+         i.group_hh_number = household_no,
          i.individual_no = individual_no_national_id_number,
          i.nationality = nationality,
          i.status = status_refugee_host,
@@ -55,7 +57,7 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 #          i.beneficiary_name = name_in_full,
 #          i.age = age,
 #          i.gender = gender,
-#          i.household_no = ration_card_number,
+#          i.group_hh_number = ration_card_number,
 #          i.settlement = "Lamwo",
 #          i.vulnerability_status = vulnerability_category,) |> 
 #   support_replacement()
@@ -74,12 +76,12 @@ df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
                           }) |> 
   clean_names() |> 
   as_tibble() |> 
-  mutate(i.dataset_desc = "DPR_NFI_Lamwo_ECHO2",
+  mutate(i.dataset_desc = "DPR_List of beneficiaries for NFIs Assistance_Lamwo_ECHO DPR_2",
          i.sheet_name = sheet_name,
          i.beneficiary_name = name_in_full,
          i.age = age,
          i.gender = gender,
-         i.household_no = ration_card_number,
+         i.group_hh_number = ration_card_number,
          i.settlement = "Lamwo",
          i.vulnerability_status = vulnerability_category,) |> 
   support_replacement() |> 
@@ -90,12 +92,13 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 db_loc_dpr_mpc_rhino <- "support_files/databases/DPR_MPCT Beneficiary List for Rhino Camp Settlement.xlsx"
 df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |> 
   clean_names() |> 
-  mutate(i.dataset_desc = "DPR_MPCT_Rhino Camp",
+  mutate(i.dataset_desc = "DPR_MPCT Beneficiary List for Rhino Camp Settlement",
+         i.sheet_name = "Sheet1",
          i.beneficiary_name = fp_full_name,
          i.age = psn_age,
          i.age_band = age_group_date_of_birth,
          i.gender = sex,
-         i.household_no = registration_group,
+         i.group_hh_number = registration_group,
          i.individual_no = psn_individual_id,
          i.settlement = "Rhino camp",
          i.mobile_phone = record_mobile_phone_number_registered_for_mobile_money_if_not_record_no_phone
@@ -107,11 +110,12 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 db_loc_dpr_mpc_imvepi <- "support_files/databases/DPR_MPCT Beneficiary List_Imvepi refugee settlement.xlsx"
 df_dpr_mpc_imvepi <- readxl::read_excel(path = db_loc_dpr_mpc_imvepi, skip = 3) |> 
   clean_names() |> 
-  mutate(i.dataset_desc = "DPR_MPCT_Imvepi Camp",
+  mutate(i.dataset_desc = "DPR_MPCT Beneficiary List_Imvepi refugee settlement",
+         i.sheet_name = "List of Paid Beneficiaries",
          i.beneficiary_name = beneficiary_name,
          i.age = age_dob,
          i.gender = gender,
-         i.household_no = group_no,
+         i.group_hh_number = group_no,
          i.individual_no = individual_no,
          i.settlement = "Imvepi",
          i.mobile_phone = mo_mo_number
@@ -158,7 +162,7 @@ df_include <- purrr::map2_df(.x = rio::import_list(db_loc_include_cash, skip = 3
   mutate(i.dataset_desc = "INCLUDE_Cash Beneficiary List Term III 2022",
          i.sheet_name = sheet_name,
          i.beneficiary_name = name_of_household_head,
-         i.household_no = household_number,
+         i.group_hh_number = household_number,
          i.individual_no = individual_number,
          i.settlement = settlement
   ) |>
@@ -181,7 +185,7 @@ df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
          i.sheet_name = sheet_name,
          i.beneficiary_name = name_of_household_head,
          i.gender = gender,
-         i.household_no = ifelse(is.na(group_household_number), group_id, group_household_number),
+         i.group_hh_number = ifelse(is.na(group_household_number), group_id, group_household_number),
          i.individual_no = ifelse(is.na(refugee_number_of_household_head_or_caregiver), individual_id, refugee_number_of_household_head_or_caregiver),
          i.settlement = ifelse(is.na(settlement), location, settlement),
          i.mobile_phone = household_phone_number_mtn,
@@ -207,7 +211,7 @@ df_include_scholastics <- purrr::map2_df(.x = rio::import_list(db_loc_include_sc
          i.sheet_name = sheet_name,
          i.beneficiary_name = full_name_focal_point_individual,
          i.gender = sex_focal_point,
-         i.household_no = registration_group_id,
+         i.group_hh_number = registration_group_id,
          i.settlement = "Kyangwali",
          i.zone = zone,
          i.purpose_of_cash = purpose_of_cash
@@ -231,7 +235,7 @@ df_include_scholastics2 <- purrr::map2_df(.x = rio::import_list(db_loc_include_s
          i.sheet_name = sheet_name,
          i.beneficiary_name = full_name_focal_point_individual,
          i.gender = sex_focal_point,
-         i.household_no = registration_group_id,
+         i.group_hh_number = registration_group_id,
          i.settlement = "Kyangwali",
          i.zone = zone,
          i.purpose_of_cash = purpose_of_cash
@@ -356,7 +360,7 @@ df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23) |>
          i.beneficiary_name = name_of_household_focal_point ,
          i.age = age_of_household_focal_point,
          i.gender = sex_of_household_focal_point,
-         i.household_no = registration_group_id,
+         i.group_hh_number = registration_group_id,
          i.individual_no = idividual_id_of_household_focal_point,
          # i.status = status_refugee_host_community,
          # i.nationality = counrty_of_origin,
@@ -367,35 +371,99 @@ df_ucc_mpct_22_23 <- readxl::read_excel(path = db_loc_ucc_mpct_22_23) |>
   ) |>
   support_replacement()
 
-
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23")
 
+# df_ucc_mpct_21_22_kyangwali
 db_loc_ucc_mpct_21_22_kyangwali <- "support_files/databases/UCC MPCT Beneficiary List Aug 2021- June 2022 Kyangwali.xlsx"
-df_ucc_mpct_21_22_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_21_22_kyangwali, skip = 8)
+df_ucc_mpct_21_22_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_21_22_kyangwali, skip = 8) |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "UCC MPCT Beneficiary List Aug 2021- June 2022 Kyangwali",
+         i.sheet_name = "MPCT Beneficiary list Kyangwali",
+         i.beneficiary_name = hh_focal_point_name ,
+         i.age = age,
+         i.gender = sex,
+         i.group_hh_number = hh_group_number,
+         i.settlement = "Kyangwali"
 
+  ) |>
+  support_replacement()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_21_22_kyangwali")
 
+# df_ucc_mpct_22_23_palabek
 db_loc_ucc_mpct_22_23_palabek <- "support_files/databases/UCC MPCT Beneficiary List Aug 2022-2023 Palabek.xlsx"
-df_ucc_mpct_22_23_palabek <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_palabek, skip = 8)
-
+df_ucc_mpct_22_23_palabek <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_palabek, skip = 8) |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "UCC MPCT Beneficiary List Aug 2021- June 2022 Kyangwali",
+         i.sheet_name = "Palabek Beneficiary list",
+         i.beneficiary_name = benefciary_name ,
+         i.age = age,
+         i.gender = gender,
+         i.group_hh_number = group_no,
+         i.settlement = "Palabek",
+         i.zone = zone
+  ) |>
+  support_replacement()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_palabek")
 
+# df_ucc_mpct_21_22
 db_loc_ucc_mpct_21_22 <- "support_files/databases/UCC MPCT Beneficiary list JUN 2021-AUG 2022.xlsx"
-df_ucc_mpct_21_22 <- readxl::read_excel(path = db_loc_ucc_mpct_21_22)
-
+df_ucc_mpct_21_22 <- readxl::read_excel(path = db_loc_ucc_mpct_21_22) |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "UCC MPCT Beneficiary list JUN 2021-AUG 2022",
+         i.sheet_name = "MPCT",
+         i.beneficiary_name = name_of_household_focal_point ,
+         i.age = age_of_household_focal_point,
+         i.gender = sex_of_household_focal_point,
+         i.group_hh_number = registration_group_id,
+         i.individual_no = idividual_id_of_household_focal_point,
+         i.settlement = settlement,
+         i.zone = zone
+         
+  ) |>
+  support_replacement()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_21_22")
 
+# df_ucc_mpct_22_23_kyaka
 db_loc_ucc_mpct_22_23_kyaka <- "support_files/databases/UCC MPCT Beneficiary List Kyaka Aug 2022- 2023.xlsx"
-df_ucc_mpct_22_23_kyaka <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyaka, skip = 9)
-
+df_ucc_mpct_22_23_kyaka <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyaka, skip = 10) |> 
+  filter(!is.na(`Reference Number`)) |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "UCC MPCT Beneficiary List Kyaka Aug 2022- 2023",
+         i.sheet_name = "Kyaka MPCT Benefiaiary list 22",
+         i.beneficiary_name = full_name_focal_point_individual ,
+         i.age = age_focal_point,
+         i.gender = sex_focal_point,
+         i.group_hh_number = registration_group_id,
+         i.individual_no = individual_id,
+         i.settlement = "Kyaka"
+  ) |>
+  support_replacement()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_kyaka")
 
+# df_ucc_mpct_22_23_kyangwali
 db_loc_ucc_mpct_22_23_kyangwali <- "support_files/databases/UCC MPCT Beneficiary List Kyangwali Aug 2022-2023.xlsx"
-df_ucc_mpct_22_23_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyangwali, skip = 1)
-
+df_ucc_mpct_22_23_kyangwali <- readxl::read_excel(path = db_loc_ucc_mpct_22_23_kyangwali, skip = 2) |> 
+  clean_names() |> 
+  mutate(i.dataset_desc = "UCC MPCT Beneficiary List Kyangwali Aug 2022-2023",
+         i.sheet_name = "MPCT Beneficiary List Kyangwali",
+         i.beneficiary_name = focal_point_name ,
+         i.gender = gender,
+         i.group_hh_number = hh_number,
+         i.individual_no = indiv_number,
+         i.settlement = "Kyangwali"
+  ) |>
+  support_replacement()
 
 add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_ucc_mpct_22_23_kyangwali")
+
+
+
+# merge the processed datasets --------------------------------------------
+
+df_merged_data <- bind_rows(merged_data_list)
+
+rio::export(x = df_merged_data, file = "support_files/databases/bna_2023_merged_databases.xlsx")
