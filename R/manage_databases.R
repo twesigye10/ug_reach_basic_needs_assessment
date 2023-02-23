@@ -492,7 +492,8 @@ df_merged_data <- bind_rows(merged_data_list) |>
   mutate(settlement = case_when(str_detect(string = settlement, pattern = fixed('Imvepi', ignore_case = TRUE)) ~ "Imvepi",
                                 str_detect(string = settlement, pattern = fixed('KYAKA', ignore_case = TRUE)) ~ "KYAKA II",
                                 str_detect(string = settlement, pattern = fixed('Kyangwali', ignore_case = TRUE)) ~ "Kyangwali",
-                                str_detect(string = settlement, pattern = fixed('Nakivaale|Nakivale', ignore_case = TRUE)) ~ "Nakivale",
+                                str_detect(string = settlement, pattern = fixed('Nakivaale', ignore_case = TRUE)) ~ "Nakivale",
+                                str_detect(string = settlement, pattern = fixed('Nakivale', ignore_case = TRUE)) ~ "Nakivale",
                                 str_detect(string = settlement, pattern = fixed('Rhino', ignore_case = TRUE)) ~ "Rhino Camp",
                                 TRUE ~ settlement
   ))
