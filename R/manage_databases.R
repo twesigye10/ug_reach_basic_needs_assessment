@@ -488,7 +488,14 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 # merge the processed datasets --------------------------------------------
 
 df_merged_data <- bind_rows(merged_data_list) |> 
-  mutate(int.row_id = row_number())
+  mutate(int.row_id = row_number()) |> 
+  mutate(settlement = case_when(str_detect(string = settlement, pattern = fixed('Imvepi', ignore_case = TRUE)) ~ "Imvepi",
+                                str_detect(string = settlement, pattern = fixed('KYAKA', ignore_case = TRUE)) ~ "KYAKA II",
+                                str_detect(string = settlement, pattern = fixed('Kyangwali', ignore_case = TRUE)) ~ "Kyangwali",
+                                str_detect(string = settlement, pattern = fixed('Nakivaale|Nakivale', ignore_case = TRUE)) ~ "Nakivale",
+                                str_detect(string = settlement, pattern = fixed('Rhino', ignore_case = TRUE)) ~ "Rhino Camp",
+                                TRUE ~ settlement
+  ))
 
 # update group_hh_no based on other occurance of individual_no
 df_update_group_hh_no <- df_merged_data |> 
