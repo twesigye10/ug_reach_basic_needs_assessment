@@ -532,14 +532,21 @@ df_unique_group_no <- df_updated_data_with_group_no |>
          DPR = ifelse(str_detect(string = paste(DPR, collapse = " : "), pattern = "Yes"), 1, NA),
          DPR_MPCT = ifelse(str_detect(string = paste(DPR_MPCT, collapse = " : "), pattern = "Yes"), 1, NA),
          INCLUDE = ifelse(str_detect(string = paste(INCLUDE, collapse = " : "), pattern = "Yes"), 1, NA),
-         # INCLUDE_NRC = ifelse(str_detect(string = paste(INCLUDE_NRC, collapse = " : "), pattern = "Yes"), 1, NA),
          UCC_MPCT = ifelse(str_detect(string = paste(UCC_MPCT, collapse = " : "), pattern = "Yes"), 1, NA)
          ) |> 
   filter(row_number() == 1) |> 
   ungroup() |> 
   rowwise() |>
   mutate(assistance_count = sum(c_across(APEAL:UCC_MPCT), na.rm = TRUE)) |>
-  ungroup()
+  ungroup() |> 
+  mutate(
+    int.APEAL = ifelse(!is.na(APEAL), "APEAL", NA),
+    int.hh_DPR = ifelse(!is.na(DPR), "DPR", NA),
+    int.hh_DPR_MPCT = ifelse(!is.na(DPR_MPCT), "DPR_MPCT", NA),
+    int.hh_INCLUDE = ifelse(!is.na(INCLUDE), "INCLUDE", NA),
+    int.hh_UCC_MPCT = ifelse(!is.na(UCC_MPCT), "UCC_MPCT", NA)
+  ) |> 
+  unite(col = int.overlap, int.APEAL:int.hh_UCC_MPCT, sep = "_", na.rm = TRUE)
 
 rio::export(x = list(all_data = df_updated_data, 
                      data_with_group_no = df_updated_data_with_group_no,
