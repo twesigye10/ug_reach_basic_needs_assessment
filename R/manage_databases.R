@@ -190,7 +190,7 @@ df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
   clean_names() |> 
   mutate(i.dataset_desc = "INCLUDE_NRC consolidated Cash beneficiary",
          i.sheet_name = sheet_name,
-         i.assistance_received = "INCLUDE_NRC",
+         i.assistance_received = "INCLUDE",
          i.beneficiary_name = name_of_household_head,
          i.gender = gender,
          i.group_hh_no = ifelse(is.na(group_household_number), group_id, group_household_number),
@@ -532,7 +532,7 @@ df_unique_group_no <- df_updated_data_with_group_no |>
          DPR = ifelse(str_detect(string = paste(DPR, collapse = " : "), pattern = "Yes"), 1, NA),
          DPR_MPCT = ifelse(str_detect(string = paste(DPR_MPCT, collapse = " : "), pattern = "Yes"), 1, NA),
          INCLUDE = ifelse(str_detect(string = paste(INCLUDE, collapse = " : "), pattern = "Yes"), 1, NA),
-         INCLUDE_NRC = ifelse(str_detect(string = paste(INCLUDE_NRC, collapse = " : "), pattern = "Yes"), 1, NA),
+         # INCLUDE_NRC = ifelse(str_detect(string = paste(INCLUDE_NRC, collapse = " : "), pattern = "Yes"), 1, NA),
          UCC_MPCT = ifelse(str_detect(string = paste(UCC_MPCT, collapse = " : "), pattern = "Yes"), 1, NA)
          ) |> 
   filter(row_number() == 1) |> 
