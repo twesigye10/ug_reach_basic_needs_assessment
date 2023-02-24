@@ -546,7 +546,7 @@ df_unique_group_no <- df_updated_data_with_group_no |>
     int.hh_INCLUDE = ifelse(!is.na(INCLUDE), "INCLUDE", NA),
     int.hh_UCC_MPCT = ifelse(!is.na(UCC_MPCT), "UCC_MPCT", NA)
   ) |> 
-  unite(col = int.overlap, int.APEAL:int.hh_UCC_MPCT, sep = "_", na.rm = TRUE)
+  unite(col = assistance_overlap, int.APEAL:int.hh_UCC_MPCT, sep = "_", na.rm = TRUE)
 
 rio::export(x = list(all_data = df_updated_data, 
                      data_with_group_no = df_updated_data_with_group_no,
