@@ -495,6 +495,7 @@ df_merged_data <- bind_rows(merged_data_list) |>
                                 str_detect(string = settlement, pattern = fixed('Nakivaale', ignore_case = TRUE)) ~ "Nakivale",
                                 str_detect(string = settlement, pattern = fixed('Nakivale', ignore_case = TRUE)) ~ "Nakivale",
                                 str_detect(string = settlement, pattern = fixed('Rhino', ignore_case = TRUE)) ~ "Rhino Camp",
+                                is.na(settlement) & current_place_residence %in% c("Zone I") & dataset_desc %in% c("APEAL IV Beneficiary Database") ~ "Imvepi",
                                 TRUE ~ settlement
   ))
 
