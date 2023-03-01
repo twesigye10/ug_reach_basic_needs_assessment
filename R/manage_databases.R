@@ -86,6 +86,7 @@ df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
          i.gender = gender,
          i.group_hh_no = ration_card_number,
          i.settlement = "Lamwo",
+         i.block = block,
          i.vulnerability_status = vulnerability_category,) |> 
   support_rename_str_replace() |> 
   filter(sheet_name == "General")
