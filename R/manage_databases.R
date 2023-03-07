@@ -66,16 +66,44 @@ add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "d
 # 
 # colnames(df_dpr1)
 
-db_loc_dpr2 <- "support_files/databases/DPR_List of beneficiaries for NFIs Assistance_Lamwo_ECHO DPR_2.xlsx"
-# df_dpr2 <- readxl::read_excel(path = db_loc_dpr2)
-# other sheets exist but need investigation [General, Zone 7, Zone 8, Zone 8 (no ratio card captured), 
-# Zone5A, Zone 5A (no ratio card captured]
-df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
-                          .y = readxl::excel_sheets(db_loc_dpr2),
-                          ~{  .x |>  
-                              dplyr::mutate(Block = as.character(Block),
-                                            sheet_name = .y )
-                          }) |> 
+# db_loc_dpr2 <- "support_files/databases/DPR_List of beneficiaries for NFIs Assistance_Lamwo_ECHO DPR_2.xlsx"
+# # df_dpr2 <- readxl::read_excel(path = db_loc_dpr2)
+# # other sheets exist but need investigation [General, Zone 7, Zone 8, Zone 8 (no ratio card captured), 
+# # Zone5A, Zone 5A (no ratio card captured]
+# df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
+#                           .y = readxl::excel_sheets(db_loc_dpr2),
+#                           ~{  .x |>  
+#                               dplyr::mutate(Block = as.character(Block),
+#                                             sheet_name = .y )
+#                           }) |> 
+#   clean_names() |> 
+#   as_tibble() |> 
+#   mutate(i.dataset_desc = "DPR_List of beneficiaries for NFIs Assistance_Lamwo_ECHO DPR_2",
+#          i.sheet_name = sheet_name,
+#          i.assistance_received = "DPR",
+#          i.beneficiary_name = name_in_full,
+#          i.age = age,
+#          i.gender = gender,
+#          i.group_hh_no = ration_card_number,
+#          i.settlement = "Lamwo",
+#          i.block = block,
+#          i.vulnerability_status = vulnerability_category,) |> 
+#   support_rename_str_replace() |> 
+#   filter(sheet_name == "General")
+
+# add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr2")
+
+# updated zones
+db_loc_dpr2_updated_zones <- "support_files/databases/DPR_List of beneficiaries for NFIs Assistance_Lamwo_ECHO DPR_2_updated_zones.xlsx"
+
+data_nms_dpr2_updated_zones <- names(readxl::read_excel(path = db_loc_dpr2_updated_zones, n_max = 100))
+c_types_dpr2_updated_zones <- ifelse(str_detect(string = data_nms_dpr2_updated_zones, pattern = "ZONE|BLOCK"), "text",  "guess")
+
+df_dpr2_updated_zones <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2_updated_zones, col_types = c_types_dpr2_updated_zones),
+                                        .y = readxl::excel_sheets(db_loc_dpr2_updated_zones),
+                                        ~{  .x |>  
+                                            dplyr::mutate(sheet_name = .y )
+                                        }) |> 
   clean_names() |> 
   as_tibble() |> 
   mutate(i.dataset_desc = "DPR_List of beneficiaries for NFIs Assistance_Lamwo_ECHO DPR_2",
@@ -83,15 +111,15 @@ df_dpr2 <- purrr::map2_df(.x = rio::import_list(db_loc_dpr2),
          i.assistance_received = "DPR",
          i.beneficiary_name = name_in_full,
          i.age = age,
-         i.gender = gender,
-         i.group_hh_no = ration_card_number,
+         i.gender = gender_f_m,
+         i.group_hh_no = entitlement_card_number,
          i.settlement = "Lamwo",
          i.block = block,
-         i.vulnerability_status = vulnerability_category,) |> 
-  support_rename_str_replace() |> 
-  filter(sheet_name == "General")
-  
-add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr2")
+         i.zone = zone,
+         i.vulnerability_status = vul_category,) |> 
+  support_rename_str_replace()
+
+add_checks_data_to_list(input_list_name = "merged_data_list", input_df_name = "df_dpr2_updated_zones")
 
 db_loc_dpr_mpc_rhino <- "support_files/databases/DPR_MPCT Beneficiary List for Rhino Camp Settlement.xlsx"
 df_dpr_mpc_rhino <- readxl::read_excel(path = db_loc_dpr_mpc_rhino, skip = 2) |> 
