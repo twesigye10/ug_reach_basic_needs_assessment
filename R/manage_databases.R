@@ -197,6 +197,7 @@ df_include_nrc <- purrr::map2_df(.x = rio::import_list(db_loc_include_nrc),
          i.group_hh_no = ifelse(is.na(group_household_number), group_id, group_household_number),
          i.individual_no = ifelse(is.na(refugee_number_of_household_head_or_caregiver), individual_id, refugee_number_of_household_head_or_caregiver),
          i.settlement = ifelse(is.na(settlement), location, settlement),
+         i.zone = location,
          i.mobile_phone = household_phone_number_mtn,
          i.vulnerability_status = vulnerability
   ) |>
